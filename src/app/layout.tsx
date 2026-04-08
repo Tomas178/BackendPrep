@@ -3,6 +3,11 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import {
+  WEBSITE_TITLE,
+  WEBSITE_DESCRIPTION,
+  WEBSITE_KEYWORDS,
+} from '@/constants/website';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -15,11 +20,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'BackendPrep',
-  description:
-    'An interview practice app for software engineering positions in backend.',
-  applicationName: 'BackendPrep',
-  keywords: ['backend', 'interview', 'preperation'],
+  title: WEBSITE_TITLE,
+  description: WEBSITE_DESCRIPTION,
+  applicationName: WEBSITE_TITLE,
+  keywords: WEBSITE_KEYWORDS,
 };
 
 export default function RootLayout({
