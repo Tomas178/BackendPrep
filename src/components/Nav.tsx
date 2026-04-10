@@ -4,13 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ROUTES } from '@/constants/routes';
 
-const navItems = [
-  ROUTES.HOME,
-  ROUTES.PRACTICE,
-  ROUTES.CATEGORIES,
-  ROUTES.PROGRESS,
-  ROUTES.ABOUT,
-];
+const navItems = [ROUTES.HOME, ROUTES.PRACTICE];
 
 export default function Nav() {
   const pathname = usePathname() ?? ROUTES.HOME.path;
