@@ -1,8 +1,9 @@
 import OpenAI from 'openai';
 import { NextRequest, NextResponse } from 'next/server';
-import { INTERVIEW_SYSTEM_PROMPT } from '@/constants/prompts';
+import { INTERVIEW_SYSTEM_PROMPT } from '@/constants/openai/prompts';
 import { StatusCodes } from 'http-status-codes';
 import { ROLES } from '@/constants/roles';
+import { chatRequestSchema } from '@/app/schemas/chatRequestSchema';
 
 const OPENAI_MODEL = 'gpt-4o';
 
@@ -10,6 +11,16 @@ const openai = new OpenAI();
 
 export async function POST(req: NextRequest) {
   try {
+    const body = await req.json();
+    const result = chatRequestSchema.safeParse(body);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: 'Invalid request', details: result.error.issues },
+        { status: StatusCodes.BAD_REQUEST }
+      );
+    }
+
     const {
       messages,
       temperature,
@@ -17,32 +28,7 @@ export async function POST(req: NextRequest) {
       maxOutputTokens,
       frequencyPenalty,
       presencePenalty,
-    } = await req.json();
-
-    if (!Array.isArray(messages)) {
-      return NextResponse.json(
-        { error: 'Invalid request' },
-        { status: StatusCodes.BAD_REQUEST }
-      );
-    }
-
-    const clampedTemperature = Math.min(
-      2,
-      Math.max(0, Number(temperature) || 0.9)
-    );
-    const clampedTopP = Math.min(1, Math.max(0, Number(topP) || 1.0));
-    const clampedMaxoutputTokens = Math.min(
-      4000,
-      Math.max(1, Number(maxOutputTokens) || 500)
-    );
-    const clampedFrequencyPenalty = Math.min(
-      2,
-      Math.max(-2, Number(frequencyPenalty) || 0.4)
-    );
-    const clampedPresencePenalty = Math.min(
-      2,
-      Math.max(-2, Number(presencePenalty) || 0.4)
-    );
+    } = result.data;
 
     const stream = await openai.chat.completions.create({
       model: OPENAI_MODEL,
@@ -50,11 +36,11 @@ export async function POST(req: NextRequest) {
         { role: ROLES.SYSTEM, content: INTERVIEW_SYSTEM_PROMPT },
         ...messages,
       ],
-      temperature: clampedTemperature,
-      top_p: clampedTopP,
-      max_tokens: clampedMaxoutputTokens,
-      frequency_penalty: clampedFrequencyPenalty,
-      presence_penalty: clampedPresencePenalty,
+      temperature,
+      top_p: topP,
+      max_tokens: maxOutputTokens,
+      frequency_penalty: frequencyPenalty,
+      presence_penalty: presencePenalty,
       stream: true,
     });
 
