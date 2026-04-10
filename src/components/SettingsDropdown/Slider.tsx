@@ -7,6 +7,7 @@ type SliderProps = {
   onParameterChange: (value: number) => void;
   leftSide: string;
   rightSide: string;
+  fixed?: boolean;
 };
 
 export default function Slider({
@@ -18,12 +19,15 @@ export default function Slider({
   onParameterChange,
   leftSide,
   rightSide,
+  fixed = true,
 }: SliderProps) {
   return (
     <div>
       <div className="flex items-center justify-between">
         <label className="text-secondary text-xs font-medium">{label}</label>
-        <span className="text-muted text-xs">{parameter.toFixed(2)}</span>
+        <span className="text-muted text-xs">
+          {fixed ? parameter.toFixed(2) : parameter}
+        </span>
       </div>
       <input
         type="range"

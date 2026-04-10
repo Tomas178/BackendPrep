@@ -11,9 +11,18 @@ type Message = {
 type ChatProps = {
   temperature: number;
   topP: number;
+  maxOutputTokens: number;
+  frequencyPenalty: number;
+  presencePenalty: number;
 };
 
-export default function Chat({ temperature, topP }: ChatProps) {
+export default function Chat({
+  temperature,
+  topP,
+  maxOutputTokens,
+  frequencyPenalty,
+  presencePenalty,
+}: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +47,14 @@ export default function Chat({ temperature, topP }: ChatProps) {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages, temperature, topP }),
+        body: JSON.stringify({
+          messages: newMessages,
+          temperature,
+          topP,
+          maxOutputTokens,
+          frequencyPenalty,
+          presencePenalty,
+        }),
       });
 
       if (!response.ok) throw new Error('Request failed');
