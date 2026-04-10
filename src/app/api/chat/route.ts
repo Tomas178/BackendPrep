@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { StatusCodes } from 'http-status-codes';
 import { chatRequestSchema } from '@/app/schemas/chatRequestSchema';
-import { getChatStream, toReadableStream } from './service';
+import { getChatStream } from './getChatStream';
+import { toReadableStream } from './toReadableStream';
 
 export async function POST(req: NextRequest) {
   try {
