@@ -10,7 +10,7 @@ const openai = new OpenAI();
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages } = await req.json();
+    const { messages, temperature, topP } = await req.json();
 
     if (!Array.isArray(messages)) {
       return NextResponse.json(
@@ -19,12 +19,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const clampedTemperature = Math.min(
+      2,
+      Math.max(0, Number(temperature) || 0.4)
+    );
+    const clampedTopP = Math.min(1, Math.max(0, Number(topP) || 1.0));
+
     const stream = await openai.chat.completions.create({
       model: OPENAI_MODEL,
       messages: [
         { role: ROLES.SYSTEM, content: INTERVIEW_SYSTEM_PROMPT },
         ...messages,
       ],
+      temperature: clampedTemperature,
+      top_p: clampedTopP,
       stream: true,
     });
 

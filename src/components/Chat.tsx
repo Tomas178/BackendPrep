@@ -8,7 +8,12 @@ type Message = {
   content: string;
 };
 
-export default function Chat() {
+type ChatProps = {
+  temperature: number;
+  topP: number;
+};
+
+export default function Chat({ temperature, topP }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +38,7 @@ export default function Chat() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: newMessages, temperature, topP }),
       });
 
       if (!response.ok) throw new Error('Request failed');
