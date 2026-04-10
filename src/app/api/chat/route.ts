@@ -2,7 +2,6 @@ import OpenAI from 'openai';
 import { NextRequest, NextResponse } from 'next/server';
 import { INTERVIEW_SYSTEM_PROMPT } from '@/constants/prompts';
 import { StatusCodes } from 'http-status-codes';
-import { ROLES } from '@/constants/roles';
 
 const OPENAI_MODEL = 'gpt-4o';
 
@@ -25,12 +24,10 @@ export async function POST(req: NextRequest) {
     );
     const clampedTopP = Math.min(1, Math.max(0, Number(topP) || 1.0));
 
-    const stream = await openai.chat.completions.create({
+    const stream = await openai.responses.create({
       model: OPENAI_MODEL,
-      messages: [
-        { role: ROLES.SYSTEM, content: INTERVIEW_SYSTEM_PROMPT },
-        ...messages,
-      ],
+      instructions: INTERVIEW_SYSTEM_PROMPT,
+      input: messages,
       temperature: clampedTemperature,
       top_p: clampedTopP,
       stream: true,
@@ -40,10 +37,9 @@ export async function POST(req: NextRequest) {
 
     const readable = new ReadableStream({
       async start(controller) {
-        for await (const chunk of stream) {
-          const content = chunk.choices[0]?.delta?.content;
-          if (content) {
-            controller.enqueue(encoder.encode(content));
+        for await (const event of stream) {
+          if (event.type === 'response.output_text.delta' && event.delta) {
+            controller.enqueue(encoder.encode(event.delta));
           }
         }
         controller.close();

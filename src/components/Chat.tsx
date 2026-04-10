@@ -1,10 +1,10 @@
 'use client';
 
-import { ROLES, type RolesWithoutSystem } from '@/constants/roles';
+import { ROLES, type Roles } from '@/constants/roles';
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 
 type Message = {
-  role: RolesWithoutSystem;
+  role: Roles;
   content: string;
 };
 
