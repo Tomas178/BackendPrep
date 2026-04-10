@@ -1,4 +1,4 @@
-type SliderProps = {
+export type SliderProps = {
   label: string;
   parameter: number;
   minValue: number;
