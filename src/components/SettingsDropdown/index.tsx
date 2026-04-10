@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Slider from './Slider';
 import { SLIDER_CONFIGS, type SettingKey } from './config';
 
@@ -11,9 +11,29 @@ type SettingsProps = {
 
 export default function Settings({ values, onChange }: SettingsProps) {
   const [showSettings, setShowSettings] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showSettings) return;
+
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setShowSettings(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showSettings]);
 
   return (
-    <div className="border-border bg-surface border-b px-4 py-2">
+    <div
+      ref={containerRef}
+      className="border-border bg-surface border-b px-4 py-2"
+    >
       <div className="mx-auto flex max-w-3xl items-center justify-between">
         <button
           type="button"
