@@ -5,7 +5,7 @@ import Chat from '@/components/Chat';
 import Settings from '@/components/Settings';
 
 export default function Practice() {
-  const [temperature, setTemperature] = useState(0.4);
+  const [temperature, setTemperature] = useState(0.9);
   const [topP, setTopP] = useState(1.0);
 
   return (

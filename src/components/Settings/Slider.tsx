@@ -1,0 +1,43 @@
+type SliderProps = {
+  label: string;
+  parameter: number;
+  minValue: number;
+  maxValue: number;
+  stepValue: number;
+  onParameterChange: (value: number) => void;
+  leftSide: string;
+  rightSide: string;
+};
+
+export default function Slider({
+  label,
+  parameter,
+  minValue,
+  maxValue,
+  stepValue,
+  onParameterChange,
+  leftSide,
+  rightSide,
+}: SliderProps) {
+  return (
+    <div>
+      <div className="flex items-center justify-between">
+        <label className="text-secondary text-xs font-medium">{label}</label>
+        <span className="text-muted text-xs">{parameter.toFixed(2)}</span>
+      </div>
+      <input
+        type="range"
+        min={minValue}
+        max={maxValue}
+        step={stepValue}
+        value={parameter}
+        onChange={(e) => onParameterChange(parseFloat(e.target.value))}
+        className="accent-accent mt-1 w-full"
+      />
+      <div className="text-muted flex justify-between text-[10px]">
+        <span>{leftSide}</span>
+        <span>{rightSide}</span>
+      </div>
+    </div>
+  );
+}

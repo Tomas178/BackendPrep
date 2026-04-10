@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
     const clampedTemperature = Math.min(
       2,
-      Math.max(0, Number(temperature) || 0.4)
+      Math.max(0, Number(temperature) || 0.9)
     );
     const clampedTopP = Math.min(1, Math.max(0, Number(topP) || 1.0));
 
