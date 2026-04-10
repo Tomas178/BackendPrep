@@ -44,11 +44,13 @@ export default function Practice() {
       />
 
       <Chat
-        temperature={temperature}
-        topP={topP}
-        maxOutputTokens={maxOutputTokens}
-        frequencyPenalty={frequencyPenalty}
-        presencePenalty={presencePenalty}
+        settings={{
+          temperature,
+          topP,
+          maxOutputTokens,
+          frequencyPenalty,
+          presencePenalty,
+        }}
       />
     </div>
   );

@@ -1,6 +1,7 @@
 'use client';
 
 import { ROLES, type Roles } from '@/constants/roles';
+import type { ChatSettings } from '@/types/chat';
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 
 type Message = {
@@ -9,20 +10,10 @@ type Message = {
 };
 
 type ChatProps = {
-  temperature: number;
-  topP: number;
-  maxOutputTokens: number;
-  frequencyPenalty: number;
-  presencePenalty: number;
+  settings: ChatSettings;
 };
 
-export default function Chat({
-  temperature,
-  topP,
-  maxOutputTokens,
-  frequencyPenalty,
-  presencePenalty,
-}: ChatProps) {
+export default function Chat({ settings }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -49,11 +40,7 @@ export default function Chat({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: newMessages,
-          temperature,
-          topP,
-          maxOutputTokens,
-          frequencyPenalty,
-          presencePenalty,
+          settings,
         }),
       });
 

@@ -25,26 +25,28 @@ export const chatRequestSchema = z.object({
       content: z.string(),
     })
   ),
-  temperature: z
-    .number()
-    .min(MIN_TEMPERATURE)
-    .max(MAX_TEMPERATURE)
-    .default(DEFAULT_TEMPERATURE),
-  topP: z.number().min(MIN_TOP_P).max(MAX_TOP_P).default(DEFAULT_TOP_P),
-  maxOutputTokens: z
-    .number()
-    .int()
-    .min(MIN_MAX_OUTPUT_TOKENS)
-    .max(MAX_MAX_OUTPUT_TOKENS)
-    .default(DEFAULT_MAX_OUTPUT_TOKENS),
-  frequencyPenalty: z
-    .number()
-    .min(MIN_FREQUENCY_PENALTY)
-    .max(MAX_FREQUENCY_PENALTY)
-    .default(DEFAULT_FREQUENCY_PENALTY),
-  presencePenalty: z
-    .number()
-    .min(MIN_PRESENCE_PENALTY)
-    .max(MAX_PRESENCE_PENALTY)
-    .default(DEFAULT_PRESENCE_PENALTY),
+  settings: z.object({
+    temperature: z
+      .number()
+      .min(MIN_TEMPERATURE)
+      .max(MAX_TEMPERATURE)
+      .default(DEFAULT_TEMPERATURE),
+    topP: z.number().min(MIN_TOP_P).max(MAX_TOP_P).default(DEFAULT_TOP_P),
+    maxOutputTokens: z
+      .number()
+      .int()
+      .min(MIN_MAX_OUTPUT_TOKENS)
+      .max(MAX_MAX_OUTPUT_TOKENS)
+      .default(DEFAULT_MAX_OUTPUT_TOKENS),
+    frequencyPenalty: z
+      .number()
+      .min(MIN_FREQUENCY_PENALTY)
+      .max(MAX_FREQUENCY_PENALTY)
+      .default(DEFAULT_FREQUENCY_PENALTY),
+    presencePenalty: z
+      .number()
+      .min(MIN_PRESENCE_PENALTY)
+      .max(MAX_PRESENCE_PENALTY)
+      .default(DEFAULT_PRESENCE_PENALTY),
+  }),
 });

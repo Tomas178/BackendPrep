@@ -1,13 +1,7 @@
-import OpenAI from 'openai';
 import { NextRequest, NextResponse } from 'next/server';
-import { INTERVIEW_SYSTEM_PROMPT } from '@/constants/openai/prompts';
 import { StatusCodes } from 'http-status-codes';
-import { ROLES } from '@/constants/roles';
 import { chatRequestSchema } from '@/app/schemas/chatRequestSchema';
-
-const OPENAI_MODEL = 'gpt-4o';
-
-const openai = new OpenAI();
+import { getChatStream, toReadableStream } from './service';
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,44 +15,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const {
-      messages,
-      temperature,
-      topP,
-      maxOutputTokens,
-      frequencyPenalty,
-      presencePenalty,
-    } = result.data;
+    const { messages, settings } = result.data;
+    const stream = await getChatStream(messages, settings);
 
-    const stream = await openai.chat.completions.create({
-      model: OPENAI_MODEL,
-      messages: [
-        { role: ROLES.SYSTEM, content: INTERVIEW_SYSTEM_PROMPT },
-        ...messages,
-      ],
-      temperature,
-      top_p: topP,
-      max_tokens: maxOutputTokens,
-      frequency_penalty: frequencyPenalty,
-      presence_penalty: presencePenalty,
-      stream: true,
-    });
-
-    const encoder = new TextEncoder();
-
-    const readable = new ReadableStream({
-      async start(controller) {
-        for await (const chunk of stream) {
-          const content = chunk.choices[0]?.delta?.content;
-          if (content) {
-            controller.enqueue(encoder.encode(content));
-          }
-        }
-        controller.close();
-      },
-    });
-
-    return new Response(readable, {
+    return new Response(toReadableStream(stream), {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
     });
   } catch {
