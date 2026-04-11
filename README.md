@@ -1,6 +1,6 @@
 # Interview Practice App
 
-An interview practice app for software engineering positions in backend.
+An interview practice app for Junior/Entry-Level software engineering positions in backend.
 
 ## Tools
 
