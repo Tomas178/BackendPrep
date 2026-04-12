@@ -1,10 +1,10 @@
-import { getChatCompletion } from '@/lib/google/getChatCompletion';
 import {
   getGoogleInputTokenPrice,
   getGoogleOutputTokenPrice,
 } from '@/constants/LLMs/google/modelsPricings';
 import type { GoogleAvailableModels } from '@/constants/LLMs/google/availableModels';
 import type { ChatMessage, ChatSettings, ChatResponse } from '@/types/chat';
+import { getChatCompletion } from './getChatCompletion';
 
 export async function handleGoogle(
   messages: ChatMessage[],

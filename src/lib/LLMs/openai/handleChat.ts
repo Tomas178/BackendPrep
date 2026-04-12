@@ -1,4 +1,4 @@
-import { getChatCompletion } from '@/lib/openai/getChatCompletion';
+import { getChatCompletion } from '@/lib/LLMs/openai/getChatCompletion';
 import {
   getOpenaiInputTokenPrice,
   getOpenaiOutputTokenPrice,

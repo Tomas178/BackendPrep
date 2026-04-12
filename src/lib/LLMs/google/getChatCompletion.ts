@@ -1,7 +1,7 @@
 import { INTERVIEW_SYSTEM_PROMPT } from '@/constants/LLMs/prompts';
-import { google } from '@/lib/google/client';
 import { ROLES } from '@/constants/LLMs/roles';
 import type { ChatMessage, ChatSettings } from '@/types/chat';
+import { google } from './client';
 
 export function getChatCompletion(
   messages: ChatMessage[],

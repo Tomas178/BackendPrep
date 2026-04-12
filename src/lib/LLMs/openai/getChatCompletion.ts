@@ -1,5 +1,5 @@
 import { INTERVIEW_SYSTEM_PROMPT } from '@/constants/LLMs/prompts';
-import { openai } from '@/lib/openai/client';
+import { openai } from '@/lib/LLMs/openai/client';
 import { ROLES } from '@/constants/LLMs/roles';
 import type { ChatMessage, ChatSettings } from '@/types/chat';
 
