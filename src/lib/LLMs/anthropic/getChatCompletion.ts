@@ -14,7 +14,6 @@ export function getChatCompletion(
       content: msg.content,
     })),
     max_tokens: settings.maxOutputTokens,
-    temperature: settings.temperature,
-    top_p: settings.topP,
+    temperature: Math.min(settings.temperature, 1),
   });
 }

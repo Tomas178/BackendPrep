@@ -18,8 +18,6 @@ export function getChatCompletion(
       temperature: settings.temperature,
       topP: settings.topP,
       maxOutputTokens: settings.maxOutputTokens,
-      frequencyPenalty: settings.frequencyPenalty,
-      presencePenalty: settings.presencePenalty,
     },
   });
 }

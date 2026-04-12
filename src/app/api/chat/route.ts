@@ -28,7 +28,8 @@ export async function POST(req: NextRequest) {
     const response = await getResponse(provider, messages, settings);
 
     return NextResponse.json(response);
-  } catch {
+  } catch (error) {
+    console.error('Chat API error:', error);
     return errorResponse(
       'Failed to process request',
       StatusCodes.INTERNAL_SERVER_ERROR

@@ -16,10 +16,6 @@ export const GOOGLE_MODELS_PRICINGS: Record<
     INPUT_TOKEN_PRICE: 0.1 / 1_000_000,
     OUTPUT_TOKEN_PRICE: 0.4 / 1_000_000,
   },
-  [GOOGLE_AVAILABLE_MODELS.GEMINI_2_5_FLASH_LITE_PREVIEW]: {
-    INPUT_TOKEN_PRICE: 0.1 / 1_000_000,
-    OUTPUT_TOKEN_PRICE: 0.4 / 1_000_000,
-  },
 };
 
 export function getGoogleInputTokenPrice(model: GoogleAvailableModels): number {

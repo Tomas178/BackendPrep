@@ -59,15 +59,25 @@ export default function Settings({
         <div className="border-border bg-surface absolute top-full left-0 z-50 mt-1.5 w-80 rounded-xl border p-4 shadow-lg">
           <div className="space-y-4">
             {SLIDER_CONFIGS.map(
-              ({ key, unsupportedProviders, ...sliderProps }) => (
-                <Slider
-                  key={key}
-                  {...sliderProps}
-                  parameter={values[key]}
-                  onParameterChange={onChange[key]}
-                  disabled={unsupportedProviders?.includes(provider)}
-                />
-              )
+              ({
+                key,
+                unsupportedProviders,
+                maxValueOverrides,
+                ...sliderProps
+              }) => {
+                const maxValue =
+                  maxValueOverrides?.[provider] ?? sliderProps.maxValue;
+                return (
+                  <Slider
+                    key={key}
+                    {...sliderProps}
+                    maxValue={maxValue}
+                    parameter={Math.min(values[key], maxValue)}
+                    onParameterChange={onChange[key]}
+                    disabled={unsupportedProviders?.includes(provider)}
+                  />
+                );
+              }
             )}
           </div>
         </div>

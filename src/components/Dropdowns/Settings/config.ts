@@ -26,6 +26,7 @@ export type SliderConfig = Omit<
 > & {
   key: SettingKey;
   unsupportedProviders?: string[];
+  maxValueOverrides?: Partial<Record<string, number>>;
 };
 
 export const SLIDER_CONFIGS: SliderConfig[] = [
@@ -37,6 +38,7 @@ export const SLIDER_CONFIGS: SliderConfig[] = [
     stepValue: 0.01,
     explanatoryTextForMinValue: 'Precise',
     explanatoryTextForMaxValue: 'Creative',
+    maxValueOverrides: { [AVAILABLE_LLMS.ANTHROPIC]: 1 },
   },
   {
     key: 'topP',
@@ -46,6 +48,7 @@ export const SLIDER_CONFIGS: SliderConfig[] = [
     stepValue: 0.01,
     explanatoryTextForMinValue: 'Narrow',
     explanatoryTextForMaxValue: 'Broad',
+    unsupportedProviders: [AVAILABLE_LLMS.ANTHROPIC],
   },
   {
     key: 'maxOutputTokens',
@@ -65,7 +68,7 @@ export const SLIDER_CONFIGS: SliderConfig[] = [
     stepValue: 0.01,
     explanatoryTextForMinValue: 'Repetitive',
     explanatoryTextForMaxValue: 'Varied',
-    unsupportedProviders: [AVAILABLE_LLMS.ANTHROPIC],
+    unsupportedProviders: [AVAILABLE_LLMS.ANTHROPIC, AVAILABLE_LLMS.GOOGLE],
   },
   {
     key: 'presencePenalty',
@@ -75,6 +78,6 @@ export const SLIDER_CONFIGS: SliderConfig[] = [
     stepValue: 0.01,
     explanatoryTextForMinValue: 'Focused',
     explanatoryTextForMaxValue: 'Exploratory',
-    unsupportedProviders: [AVAILABLE_LLMS.ANTHROPIC],
+    unsupportedProviders: [AVAILABLE_LLMS.ANTHROPIC, AVAILABLE_LLMS.GOOGLE],
   },
 ];

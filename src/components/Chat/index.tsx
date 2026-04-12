@@ -49,12 +49,16 @@ export default function Chat({
     setInput('');
     setIsLoading(true);
 
+    const apiMessages = newMessages.filter(
+      (msg) => msg.content !== ASSISTANT_WELCOME_MESSAGE
+    );
+
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: newMessages,
+          messages: apiMessages,
           provider,
           settings,
         }),

@@ -79,11 +79,6 @@ const GOOGLE_MODEL_OPTIONS: ModelOption<GoogleAvailableModels>[] = [
     label: 'Gemini 2.5 Flash Lite',
     description: 'Balanced',
   },
-  {
-    value: GOOGLE_AVAILABLE_MODELS.GEMINI_2_5_FLASH_LITE_PREVIEW,
-    label: 'Gemini 2.5 Flash Lite Preview',
-    description: 'Preview',
-  },
 ];
 
 export const MODEL_OPTIONS: Record<AvailableLLMs, ModelOption[]> = {
