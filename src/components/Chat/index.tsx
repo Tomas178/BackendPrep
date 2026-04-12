@@ -2,7 +2,6 @@
 
 import { ROLES } from '@/constants/openai/enums/roles';
 import type { ChatMessage, ChatSettings, UsageData } from '@/types/chat';
-import { USAGE_SEPARATOR } from '@/lib/openai/toReadableStream';
 import MessageBox from './MessageBox';
 import { useState, useRef, useEffect, useMemo, KeyboardEvent } from 'react';
 
@@ -51,46 +50,18 @@ export default function Chat({ settings }: ChatProps) {
         throw new Error(data?.error || 'Request failed');
       }
 
-      const reader = response.body!.getReader();
-      const decoder = new TextDecoder();
-      let fullContent = '';
+      const data: { content: string; usage?: UsageData } =
+        await response.json();
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const chunk = decoder.decode(value, { stream: true });
-        fullContent += chunk;
-
-        const separatorIndex = fullContent.indexOf(USAGE_SEPARATOR);
-        const displayContent =
-          separatorIndex === -1
-            ? fullContent
-            : fullContent.slice(0, separatorIndex);
-
-        setMessages((prev) => {
-          const updated = [...prev];
-          updated[updated.length - 1] = {
-            ...updated[updated.length - 1],
-            content: displayContent,
-          };
-          return updated;
-        });
-      }
-
-      const separatorIndex = fullContent.indexOf(USAGE_SEPARATOR);
-      if (separatorIndex !== -1) {
-        const usage: UsageData = JSON.parse(
-          fullContent.slice(separatorIndex + 1)
-        );
-        setMessages((prev) => {
-          const updated = [...prev];
-          updated[updated.length - 1] = {
-            ...updated[updated.length - 1],
-            usage,
-          };
-          return updated;
-        });
-      }
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1] = {
+          ...updated[updated.length - 1],
+          content: data.content,
+          usage: data.usage,
+        };
+        return updated;
+      });
     } catch (error) {
       const errorMessage =
         error instanceof Error && error.message !== 'Request failed'

@@ -1,10 +1,13 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { StatusCodes } from 'http-status-codes';
 import { chatRequestSchema } from '@/schemas/chatRequestSchema';
 import { errorResponse } from '@/lib/api/errorResponse';
 import { isMessageFlagged } from '@/lib/openai/moderate';
-import { getChatStream } from '@/lib/openai/getChatStream';
-import { toReadableStream } from '@/lib/openai/toReadableStream';
+import { getChatCompletion } from '@/lib/openai/getChatCompletion';
+import {
+  getInputTokenPrice,
+  getOutputTokenPrice,
+} from '@/constants/openai/enums/modelsPricings';
 import { ROLES } from '@/constants/openai/enums/roles';
 
 export async function POST(req: NextRequest) {
@@ -17,7 +20,6 @@ export async function POST(req: NextRequest) {
     }
 
     const { messages, settings } = result.data;
-    console.log(settings);
 
     const lastMessage = messages[messages.length - 1];
     if (
@@ -30,10 +32,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const stream = await getChatStream(messages, settings);
+    const completion = await getChatCompletion(messages, settings);
+    const content = completion.choices[0]?.message?.content ?? '';
+    const usage = completion.usage;
 
-    return new Response(toReadableStream(stream, settings.model), {
-      headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    return NextResponse.json({
+      content,
+      usage: usage
+        ? {
+            promptTokens: usage.prompt_tokens,
+            completionTokens: usage.completion_tokens,
+            cost:
+              usage.prompt_tokens * getInputTokenPrice(settings.model) +
+              usage.completion_tokens * getOutputTokenPrice(settings.model),
+          }
+        : undefined,
     });
   } catch {
     return errorResponse(
