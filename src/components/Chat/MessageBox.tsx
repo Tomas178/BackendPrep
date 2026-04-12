@@ -22,7 +22,7 @@ export default function MessageBox({ message }: MessageBoxProps) {
         </div>
         {message.usage && (
           <p className="text-muted mt-1 px-1 text-xs">
-            {message.usage.promptTokens + message.usage.completionTokens} tokens
+            {`${message.usage.promptTokens + message.usage.completionTokens} tokens`}
             &middot; ${message.usage.cost.toFixed(4)}
           </p>
         )}
