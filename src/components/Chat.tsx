@@ -44,7 +44,10 @@ export default function Chat({ settings }: ChatProps) {
         }),
       });
 
-      if (!response.ok) throw new Error('Request failed');
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.error || 'Request failed');
+      }
 
       const reader = response.body!.getReader();
       const decoder = new TextDecoder();
@@ -63,12 +66,17 @@ export default function Chat({ settings }: ChatProps) {
           return updated;
         });
       }
-    } catch {
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error && error.message !== 'Request failed'
+          ? error.message
+          : 'Something went wrong. Please try again.';
+
       setMessages((prev) => {
         const updated = [...prev];
         updated[updated.length - 1] = {
           role: ROLES.ASSISTANT,
-          content: 'Something went wrong. Please try again.',
+          content: errorMessage,
         };
         return updated;
       });
