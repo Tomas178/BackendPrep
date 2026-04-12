@@ -13,14 +13,14 @@ import {
   MIN_PRESENCE_PENALTY,
   MIN_TEMPERATURE,
   MIN_TOP_P,
-} from '@/constants/openai/settings';
+} from '@/constants/LLMs/settings';
 import {
   AVAILABLE_MODEL_VALUES,
   AVAILABLE_MODELS,
-} from '@/constants/openai/enums/availableModels';
-import { ROLES } from '@/constants/openai/enums/roles';
+} from '@/constants/LLMs/openai/availableModels';
+import { ROLES } from '@/constants/LLMs/roles';
 import * as z from 'zod';
-import { MAX_FREQUENCY_PENALTY } from '@/constants/openai/settings';
+import { MAX_FREQUENCY_PENALTY } from '@/constants/LLMs/settings';
 
 export const chatRequestSchema = z.object({
   messages: z.array(

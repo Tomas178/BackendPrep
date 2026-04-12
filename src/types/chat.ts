@@ -1,5 +1,5 @@
-import { AvailableModels } from '@/constants/openai/enums/availableModels';
-import { RolesWithoutSystem } from '@/constants/openai/enums/roles';
+import { AvailableModels } from '@/constants/LLMs/openai/availableModels';
+import { RolesWithoutSystem } from '@/constants/LLMs/roles';
 
 export type ChatSettings = {
   model: AvailableModels;

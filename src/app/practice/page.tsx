@@ -10,11 +10,11 @@ import {
   DEFAULT_PRESENCE_PENALTY,
   DEFAULT_TEMPERATURE,
   DEFAULT_TOP_P,
-} from '@/constants/openai/settings';
+} from '@/constants/LLMs/settings';
 import {
   AVAILABLE_MODELS,
   AvailableModels,
-} from '@/constants/openai/enums/availableModels';
+} from '@/constants/LLMs/openai/availableModels';
 
 export default function Practice() {
   const [temperature, setTemperature] = useState(DEFAULT_TEMPERATURE);

@@ -1,6 +1,6 @@
-import { INTERVIEW_SYSTEM_PROMPT } from '@/constants/openai/prompts';
+import { INTERVIEW_SYSTEM_PROMPT } from '@/constants/LLMs/prompts';
 import { openai } from '@/lib/openai/client';
-import { ROLES } from '@/constants/openai/enums/roles';
+import { ROLES } from '@/constants/LLMs/roles';
 import type { ChatMessage, ChatSettings } from '@/types/chat';
 
 export function getChatCompletion(

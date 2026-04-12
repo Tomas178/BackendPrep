@@ -1,7 +1,7 @@
 'use client';
 
-import { ROLES } from '@/constants/openai/enums/roles';
-import { ASSISTANT_WELCOME_MESSAGE } from '@/constants/openai/prompts';
+import { ROLES } from '@/constants/LLMs/roles';
+import { ASSISTANT_WELCOME_MESSAGE } from '@/constants/LLMs/prompts';
 import type { ChatMessage, ChatSettings, UsageData } from '@/types/chat';
 import MessageBox from './MessageBox';
 import { useState, useRef, useEffect, useMemo, KeyboardEvent } from 'react';

@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Box, ChevronDown, Check } from 'lucide-react';
-import type { AvailableModels } from '@/constants/openai/enums/availableModels';
-import { MODEL_OPTIONS } from './modelOptions';
+import type { AvailableModels } from '@/constants/LLMs/openai/availableModels';
+import { MODEL_OPTIONS } from './config';
 
 type ModelsDropdownProps = {
   model: AvailableModels;

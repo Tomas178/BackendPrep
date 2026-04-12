@@ -10,7 +10,7 @@ import {
   MIN_PRESENCE_PENALTY,
   MIN_TEMPERATURE,
   MIN_TOP_P,
-} from '@/constants/openai/settings';
+} from '@/constants/LLMs/settings';
 
 export type SettingKey =
   | 'temperature'

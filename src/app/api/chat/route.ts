@@ -7,8 +7,8 @@ import { getChatCompletion } from '@/lib/openai/getChatCompletion';
 import {
   getInputTokenPrice,
   getOutputTokenPrice,
-} from '@/constants/openai/enums/modelsPricings';
-import { ROLES } from '@/constants/openai/enums/roles';
+} from '@/constants/LLMs/openai/modelsPricings';
+import { ROLES } from '@/constants/LLMs/roles';
 
 export async function POST(req: NextRequest) {
   try {

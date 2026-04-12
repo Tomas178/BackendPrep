@@ -1,7 +1,7 @@
 import {
   AVAILABLE_MODELS,
   type AvailableModels,
-} from '@/constants/openai/enums/availableModels';
+} from '@/constants/LLMs/openai/availableModels';
 
 export const MODEL_OPTIONS: {
   value: AvailableModels;

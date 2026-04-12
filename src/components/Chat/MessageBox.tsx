@@ -1,4 +1,4 @@
-import { ROLES } from '@/constants/openai/enums/roles';
+import { ROLES } from '@/constants/LLMs/roles';
 import { ChatMessage } from '@/types/chat';
 
 type MessageBoxProps = {
