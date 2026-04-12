@@ -16,7 +16,7 @@ import {
 } from '@/constants/openai/settings';
 import { ROLES } from '@/constants/roles';
 import * as z from 'zod';
-import { MAX_FREQUENCY_PENALTY } from '../../constants/openai/settings';
+import { MAX_FREQUENCY_PENALTY } from '@/constants/openai/settings';
 
 export const chatRequestSchema = z.object({
   messages: z.array(

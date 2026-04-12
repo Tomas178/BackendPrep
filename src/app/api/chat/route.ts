@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { StatusCodes } from 'http-status-codes';
-import { chatRequestSchema } from '@/app/schemas/chatRequestSchema';
+import { chatRequestSchema } from '@/schemas/chatRequestSchema';
 import { getChatStream } from './getChatStream';
 import { toReadableStream } from './toReadableStream';
 
