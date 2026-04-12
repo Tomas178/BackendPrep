@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { StatusCodes } from 'http-status-codes';
 import { chatRequestSchema } from '@/schemas/chatRequestSchema';
 import { isMessageFlagged } from '@/lib/openai/moderate';
-import { getChatStream } from './getChatStream';
-import { toReadableStream } from './toReadableStream';
+import { getChatStream } from '@/lib/openai/getChatStream';
+import { toReadableStream } from '@/lib/openai/toReadableStream';
 
 export async function POST(req: NextRequest) {
   try {
