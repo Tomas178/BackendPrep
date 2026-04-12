@@ -30,6 +30,9 @@
     "react-dom": "19.2.4",
     "zod": "^4.3.6"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": []
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^22.19.17",
