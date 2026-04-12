@@ -1,23 +1,24 @@
 'use client';
 
-import { ROLES, type Roles } from '@/constants/roles';
-import type { ChatSettings } from '@/types/chat';
-import { useState, useRef, useEffect, KeyboardEvent } from 'react';
-
-type Message = {
-  role: Roles;
-  content: string;
-};
+import { ROLES } from '@/constants/roles';
+import type { ChatMessage, ChatSettings, UsageData } from '@/types/chat';
+import { USAGE_SEPARATOR } from '@/lib/openai/toReadableStream';
+import { useState, useRef, useEffect, useMemo, KeyboardEvent } from 'react';
 
 type ChatProps = {
   settings: ChatSettings;
 };
 
 export default function Chat({ settings }: ChatProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const totalCost = useMemo(
+    () => messages.reduce((sum, msg) => sum + (msg.usage?.cost ?? 0), 0),
+    [messages]
+  );
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -27,7 +28,7 @@ export default function Chat({ settings }: ChatProps) {
     const trimmed = input.trim();
     if (!trimmed || isLoading) return;
 
-    const userMessage: Message = { role: ROLES.USER, content: trimmed };
+    const userMessage: ChatMessage = { role: ROLES.USER, content: trimmed };
     const newMessages = [...messages, userMessage];
 
     setMessages([...newMessages, { role: 'assistant', content: '' }]);
@@ -51,17 +52,40 @@ export default function Chat({ settings }: ChatProps) {
 
       const reader = response.body!.getReader();
       const decoder = new TextDecoder();
+      let fullContent = '';
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
         const chunk = decoder.decode(value, { stream: true });
+        fullContent += chunk;
+
+        const separatorIndex = fullContent.indexOf(USAGE_SEPARATOR);
+        const displayContent =
+          separatorIndex === -1
+            ? fullContent
+            : fullContent.slice(0, separatorIndex);
+
         setMessages((prev) => {
           const updated = [...prev];
-          const last = updated[updated.length - 1];
           updated[updated.length - 1] = {
-            ...last,
-            content: last.content + chunk,
+            ...updated[updated.length - 1],
+            content: displayContent,
+          };
+          return updated;
+        });
+      }
+
+      const separatorIndex = fullContent.indexOf(USAGE_SEPARATOR);
+      if (separatorIndex !== -1) {
+        const usage: UsageData = JSON.parse(
+          fullContent.slice(separatorIndex + 1)
+        );
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            ...updated[updated.length - 1],
+            usage,
           };
           return updated;
         });
@@ -106,14 +130,22 @@ export default function Chat({ settings }: ChatProps) {
                 key={i}
                 className={`flex ${msg.role === ROLES.USER ? 'justify-end' : 'justify-start'}`}
               >
-                <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap ${
-                    msg.role === ROLES.USER
-                      ? 'bg-accent text-accent-foreground'
-                      : 'border-border bg-surface text-primary border'
-                  }`}
-                >
-                  {msg.content || <span className="animate-pulse">...</span>}
+                <div>
+                  <div
+                    className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap ${
+                      msg.role === ROLES.USER
+                        ? 'bg-accent text-accent-foreground'
+                        : 'border-border bg-surface text-primary border'
+                    }`}
+                  >
+                    {msg.content || <span className="animate-pulse">...</span>}
+                  </div>
+                  {msg.usage && (
+                    <p className="text-muted mt-1 px-1 text-xs">
+                      {msg.usage.promptTokens + msg.usage.completionTokens}{' '}
+                      tokens &middot; ${msg.usage.cost.toFixed(4)}
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
@@ -123,6 +155,11 @@ export default function Chat({ settings }: ChatProps) {
       </div>
 
       <div className="border-border bg-surface border-t px-4 py-4">
+        {totalCost > 0 && (
+          <p className="text-muted mx-auto mb-2 max-w-3xl text-xs">
+            Session total: ${totalCost.toFixed(4)}
+          </p>
+        )}
         <form
           onSubmit={(e) => {
             e.preventDefault();

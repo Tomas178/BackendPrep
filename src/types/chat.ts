@@ -8,7 +8,14 @@ export type ChatSettings = {
   presencePenalty: number;
 };
 
+export type UsageData = {
+  promptTokens: number;
+  completionTokens: number;
+  cost: number;
+};
+
 export type ChatMessage = {
   role: RolesWithoutSystem;
   content: string;
+  usage?: UsageData;
 };

@@ -18,5 +18,6 @@ export function getChatStream(messages: ChatMessage[], settings: ChatSettings) {
     frequency_penalty: settings.frequencyPenalty,
     presence_penalty: settings.presencePenalty,
     stream: true,
+    stream_options: { include_usage: true },
   });
 }
