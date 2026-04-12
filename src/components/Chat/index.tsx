@@ -14,9 +14,14 @@ const INITIAL_MESSAGES: ChatMessage[] = [
 type ChatProps = {
   provider: AvailableLLMs;
   settings: ChatSettings;
+  onUserMessageSent?: () => void;
 };
 
-export default function Chat({ provider, settings }: ChatProps) {
+export default function Chat({
+  provider,
+  settings,
+  onUserMessageSent,
+}: ChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +42,8 @@ export default function Chat({ provider, settings }: ChatProps) {
 
     const userMessage: ChatMessage = { role: ROLES.USER, content: trimmed };
     const newMessages = [...messages, userMessage];
+
+    onUserMessageSent?.();
 
     setMessages([...newMessages, { role: 'assistant', content: '' }]);
     setInput('');

@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Chat from '@/components/Chat';
 import SettingsDropdown from '@/components/Dropdowns/Settings';
 import ModelsDropdown from '@/components/Dropdowns/Models';
 import ProviderDropdown from '@/components/Dropdowns/Provider';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import {
   DEFAULT_FREQUENCY_PENALTY,
   DEFAULT_MAX_OUTPUT_TOKENS,
@@ -44,10 +45,33 @@ export default function Practice() {
     DEFAULT_PRESENCE_PENALTY
   );
 
+  const [hasUserMessages, setHasUserMessages] = useState(false);
+  const [chatResetKey, setChatResetKey] = useState(0);
+  const [pendingProvider, setPendingProvider] = useState<AvailableLLMs | null>(
+    null
+  );
+
   function handleProviderChange(newProvider: AvailableLLMs) {
+    if (hasUserMessages) {
+      setPendingProvider(newProvider);
+      return;
+    }
     setProvider(newProvider);
     setModel(DEFAULT_MODELS[newProvider]);
   }
+
+  function confirmProviderSwitch() {
+    if (!pendingProvider) return;
+    setProvider(pendingProvider);
+    setModel(DEFAULT_MODELS[pendingProvider]);
+    setChatResetKey((prev) => prev + 1);
+    setHasUserMessages(false);
+    setPendingProvider(null);
+  }
+
+  const handleUserMessageSent = useCallback(() => {
+    setHasUserMessages(true);
+  }, []);
 
   return (
     <div className="bg-surface-alt flex flex-1 flex-col font-sans">
@@ -85,6 +109,7 @@ export default function Practice() {
       </div>
 
       <Chat
+        key={chatResetKey}
         provider={provider}
         settings={{
           model,
@@ -94,7 +119,19 @@ export default function Practice() {
           frequencyPenalty,
           presencePenalty,
         }}
+        onUserMessageSent={handleUserMessageSent}
       />
+
+      {pendingProvider && (
+        <ConfirmDialog
+          title="Switch provider?"
+          description="Switching the LLM provider will clear your current conversation. This action cannot be undone."
+          confirmLabel="Switch"
+          cancelLabel="Cancel"
+          onConfirm={confirmProviderSwitch}
+          onCancel={() => setPendingProvider(null)}
+        />
+      )}
     </div>
   );
 }
