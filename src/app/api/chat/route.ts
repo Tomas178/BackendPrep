@@ -3,12 +3,12 @@ import { StatusCodes } from 'http-status-codes';
 import { chatRequestSchema } from '@/schemas/chatRequestSchema';
 import { errorResponse } from '@/lib/api/errorResponse';
 import { isMessageFlagged } from '@/lib/openai/moderate';
-import { getChatCompletion } from '@/lib/openai/getChatCompletion';
-import {
-  getOpenaiInputTokenPrice,
-  getOpenaiOutputTokenPrice,
-} from '@/constants/LLMs/openai/modelsPricings';
+import { handleOpenai } from '@/lib/openai/handleChat';
+import { handleAnthropic } from '@/lib/anthropic/handleChat';
+import { handleGoogle } from '@/lib/google/handleChat';
 import { ROLES } from '@/constants/LLMs/roles';
+import { AVAILABLE_LLMS } from '@/constants/LLMs/availableLLMs';
+import type { ChatResponse } from '@/types/chat';
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       return errorResponse('Invalid request', StatusCodes.BAD_REQUEST);
     }
 
-    const { messages, settings } = result.data;
+    const { messages, provider, settings } = result.data;
 
     const lastMessage = messages[messages.length - 1];
     if (
@@ -32,23 +32,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const completion = await getChatCompletion(messages, settings);
-    const content = completion.choices[0]?.message?.content ?? '';
-    const usage = completion.usage;
+    let response: ChatResponse;
 
-    return NextResponse.json({
-      content,
-      usage: usage
-        ? {
-            promptTokens: usage.prompt_tokens,
-            completionTokens: usage.completion_tokens,
-            cost:
-              usage.prompt_tokens * getOpenaiInputTokenPrice(settings.model) +
-              usage.completion_tokens *
-                getOpenaiOutputTokenPrice(settings.model),
-          }
-        : undefined,
-    });
+    switch (provider) {
+      case AVAILABLE_LLMS.OPENAI:
+        response = await handleOpenai(messages, settings);
+        break;
+      case AVAILABLE_LLMS.ANTHROPIC:
+        response = await handleAnthropic(messages, settings);
+        break;
+      case AVAILABLE_LLMS.GOOGLE:
+        response = await handleGoogle(messages, settings);
+        break;
+    }
+
+    return NextResponse.json(response);
   } catch {
     return errorResponse(
       'Failed to process request',

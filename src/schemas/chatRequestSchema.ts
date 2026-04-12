@@ -14,46 +14,61 @@ import {
   MIN_TEMPERATURE,
   MIN_TOP_P,
 } from '@/constants/LLMs/settings';
-import {
-  OPENAI_AVAILABLE_MODEL_VALUES,
-  OPENAI_AVAILABLE_MODELS,
-} from '@/constants/LLMs/openai/availableModels';
+import { OPENAI_AVAILABLE_MODELS } from '@/constants/LLMs/openai/availableModels';
 import { ROLES } from '@/constants/LLMs/roles';
 import * as z from 'zod';
 import { MAX_FREQUENCY_PENALTY } from '@/constants/LLMs/settings';
+import {
+  AVAILABLE_LLMS,
+  AVAILABLE_LLMS_VALUES,
+} from '@/constants/LLMs/availableLLMs';
+import {
+  ALL_MODEL_VALUES,
+  PROVIDER_MODEL_VALUES,
+} from '@/constants/LLMs/allModels';
 
-export const chatRequestSchema = z.object({
-  messages: z.array(
-    z.object({
-      role: z.enum([ROLES.USER, ROLES.ASSISTANT]),
-      content: z.string(),
-    })
-  ),
-  settings: z.object({
-    model: z
-      .enum(OPENAI_AVAILABLE_MODEL_VALUES)
-      .default(OPENAI_AVAILABLE_MODELS.GPT_4O),
-    temperature: z
-      .number()
-      .min(MIN_TEMPERATURE)
-      .max(MAX_TEMPERATURE)
-      .default(DEFAULT_TEMPERATURE),
-    topP: z.number().min(MIN_TOP_P).max(MAX_TOP_P).default(DEFAULT_TOP_P),
-    maxOutputTokens: z
-      .number()
-      .int()
-      .min(MIN_MAX_OUTPUT_TOKENS)
-      .max(MAX_MAX_OUTPUT_TOKENS)
-      .default(DEFAULT_MAX_OUTPUT_TOKENS),
-    frequencyPenalty: z
-      .number()
-      .min(MIN_FREQUENCY_PENALTY)
-      .max(MAX_FREQUENCY_PENALTY)
-      .default(DEFAULT_FREQUENCY_PENALTY),
-    presencePenalty: z
-      .number()
-      .min(MIN_PRESENCE_PENALTY)
-      .max(MAX_PRESENCE_PENALTY)
-      .default(DEFAULT_PRESENCE_PENALTY),
-  }),
-});
+export const chatRequestSchema = z
+  .object({
+    messages: z.array(
+      z.object({
+        role: z.enum([ROLES.USER, ROLES.ASSISTANT]),
+        content: z.string(),
+      })
+    ),
+    provider: z.enum(AVAILABLE_LLMS_VALUES).default(AVAILABLE_LLMS.OPENAI),
+    settings: z.object({
+      model: z.enum(ALL_MODEL_VALUES).default(OPENAI_AVAILABLE_MODELS.GPT_4O),
+      temperature: z
+        .number()
+        .min(MIN_TEMPERATURE)
+        .max(MAX_TEMPERATURE)
+        .default(DEFAULT_TEMPERATURE),
+      topP: z.number().min(MIN_TOP_P).max(MAX_TOP_P).default(DEFAULT_TOP_P),
+      maxOutputTokens: z
+        .number()
+        .int()
+        .min(MIN_MAX_OUTPUT_TOKENS)
+        .max(MAX_MAX_OUTPUT_TOKENS)
+        .default(DEFAULT_MAX_OUTPUT_TOKENS),
+      frequencyPenalty: z
+        .number()
+        .min(MIN_FREQUENCY_PENALTY)
+        .max(MAX_FREQUENCY_PENALTY)
+        .default(DEFAULT_FREQUENCY_PENALTY),
+      presencePenalty: z
+        .number()
+        .min(MIN_PRESENCE_PENALTY)
+        .max(MAX_PRESENCE_PENALTY)
+        .default(DEFAULT_PRESENCE_PENALTY),
+    }),
+  })
+  .refine(
+    (data) =>
+      (PROVIDER_MODEL_VALUES[data.provider] as readonly string[]).includes(
+        data.settings.model
+      ),
+    {
+      message: 'Model is not available for the selected provider',
+      path: ['settings', 'model'],
+    }
+  );

@@ -8,6 +8,12 @@ const schema = z
       openai: z.object({
         apiKey: z.string().min(1, 'OPENAI_API_KEY is required'),
       }),
+      anthropic: z.object({
+        apiKey: z.string().min(1, 'ANTHROPIC_API_KEY is required'),
+      }),
+      google: z.object({
+        apiKey: z.string().min(1, 'GOOGLE_API_KEY is required'),
+      }),
     }),
   })
   .readonly();
@@ -22,6 +28,12 @@ export default function config() {
       auth: {
         openai: {
           apiKey: process.env.OPENAI_API_KEY,
+        },
+        anthropic: {
+          apiKey: process.env.ANTHROPIC_API_KEY,
+        },
+        google: {
+          apiKey: process.env.GOOGLE_API_KEY,
         },
       },
     });

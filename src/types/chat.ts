@@ -1,8 +1,8 @@
-import type { OpenaiAvailableModels } from '@/constants/LLMs/openai/availableModels';
+import { AllModels } from '@/constants/LLMs/allModels';
 import { RolesWithoutSystem } from '@/constants/LLMs/roles';
 
 export type ChatSettings = {
-  model: OpenaiAvailableModels;
+  model: AllModels;
   temperature: number;
   topP: number;
   maxOutputTokens: number;
@@ -18,6 +18,11 @@ export type UsageData = {
 
 export type ChatMessage = {
   role: RolesWithoutSystem;
+  content: string;
+  usage?: UsageData;
+};
+
+export type ChatResponse = {
   content: string;
   usage?: UsageData;
 };
