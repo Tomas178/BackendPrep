@@ -5,8 +5,8 @@ export type SliderProps = {
   maxValue: number;
   stepValue: number;
   onParameterChange: (value: number) => void;
-  leftSide: string;
-  rightSide: string;
+  explanatoryTextForMinValue: string;
+  explanatoryTextForMaxValue: string;
   fixed?: boolean;
 };
 
@@ -17,8 +17,8 @@ export default function Slider({
   maxValue,
   stepValue,
   onParameterChange,
-  leftSide,
-  rightSide,
+  explanatoryTextForMinValue,
+  explanatoryTextForMaxValue,
   fixed = true,
 }: SliderProps) {
   return (
@@ -39,8 +39,8 @@ export default function Slider({
         className="accent-accent mt-1 w-full"
       />
       <div className="text-muted flex justify-between text-[10px]">
-        <span>{leftSide}</span>
-        <span>{rightSide}</span>
+        <span>{explanatoryTextForMinValue}</span>
+        <span>{explanatoryTextForMaxValue}</span>
       </div>
     </div>
   );

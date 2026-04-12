@@ -33,8 +33,8 @@ export const SLIDER_CONFIGS: SliderConfig[] = [
     minValue: MIN_TEMPERATURE,
     maxValue: MAX_TEMPERATURE,
     stepValue: 0.01,
-    leftSide: 'Precise',
-    rightSide: 'Creative',
+    explanatoryTextForMinValue: 'Precise',
+    explanatoryTextForMaxValue: 'Creative',
   },
   {
     key: 'topP',
@@ -42,8 +42,8 @@ export const SLIDER_CONFIGS: SliderConfig[] = [
     minValue: MIN_TOP_P,
     maxValue: MAX_TOP_P,
     stepValue: 0.01,
-    leftSide: 'Narrow',
-    rightSide: 'Broad',
+    explanatoryTextForMinValue: 'Narrow',
+    explanatoryTextForMaxValue: 'Broad',
   },
   {
     key: 'maxOutputTokens',
@@ -51,8 +51,8 @@ export const SLIDER_CONFIGS: SliderConfig[] = [
     minValue: MIN_MAX_OUTPUT_TOKENS,
     maxValue: MAX_MAX_OUTPUT_TOKENS,
     stepValue: 1,
-    leftSide: 'Short',
-    rightSide: 'Long',
+    explanatoryTextForMinValue: 'Short',
+    explanatoryTextForMaxValue: 'Long',
     fixed: false,
   },
   {
@@ -61,8 +61,8 @@ export const SLIDER_CONFIGS: SliderConfig[] = [
     minValue: MIN_FREQUENCY_PENALTY,
     maxValue: MAX_FREQUENCY_PENALTY,
     stepValue: 0.01,
-    leftSide: 'Repetitive',
-    rightSide: 'Varied',
+    explanatoryTextForMinValue: 'Repetitive',
+    explanatoryTextForMaxValue: 'Varied',
   },
   {
     key: 'presencePenalty',
@@ -70,7 +70,7 @@ export const SLIDER_CONFIGS: SliderConfig[] = [
     minValue: MIN_PRESENCE_PENALTY,
     maxValue: MAX_PRESENCE_PENALTY,
     stepValue: 0.01,
-    leftSide: 'Focused',
-    rightSide: 'Exploratory',
+    explanatoryTextForMinValue: 'Focused',
+    explanatoryTextForMaxValue: 'Exploratory',
   },
 ];
