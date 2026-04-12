@@ -1,35 +1,35 @@
 import {
-  AVAILABLE_MODELS,
-  type AvailableModels,
+  OPENAI_AVAILABLE_MODELS,
+  type OpenaiAvailableModels,
 } from '@/constants/LLMs/openai/availableModels';
 
-export const MODEL_OPTIONS: {
-  value: AvailableModels;
+export const OPENAI_MODEL_OPTIONS: {
+  value: OpenaiAvailableModels;
   label: string;
   description: string;
 }[] = [
   {
-    value: AVAILABLE_MODELS.GPT_4_1,
+    value: OPENAI_AVAILABLE_MODELS.GPT_4_1,
     label: 'GPT-4.1',
     description: 'Most capable',
   },
   {
-    value: AVAILABLE_MODELS.GPT_4_1_MINI,
+    value: OPENAI_AVAILABLE_MODELS.GPT_4_1_MINI,
     label: 'GPT-4.1 mini',
     description: 'Balanced',
   },
   {
-    value: AVAILABLE_MODELS.GPT_4_1_NANO,
+    value: OPENAI_AVAILABLE_MODELS.GPT_4_1_NANO,
     label: 'GPT-4.1 nano',
     description: 'Fastest',
   },
   {
-    value: AVAILABLE_MODELS.GPT_4O,
+    value: OPENAI_AVAILABLE_MODELS.GPT_4O,
     label: 'GPT-4o',
     description: 'Vision + audio',
   },
   {
-    value: AVAILABLE_MODELS.GPT_4O_MINI,
+    value: OPENAI_AVAILABLE_MODELS.GPT_4O_MINI,
     label: 'GPT-4o mini',
     description: 'Fast + affordable',
   },

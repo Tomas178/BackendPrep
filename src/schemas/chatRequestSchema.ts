@@ -15,8 +15,8 @@ import {
   MIN_TOP_P,
 } from '@/constants/LLMs/settings';
 import {
-  AVAILABLE_MODEL_VALUES,
-  AVAILABLE_MODELS,
+  OPENAI_AVAILABLE_MODEL_VALUES,
+  OPENAI_AVAILABLE_MODELS,
 } from '@/constants/LLMs/openai/availableModels';
 import { ROLES } from '@/constants/LLMs/roles';
 import * as z from 'zod';
@@ -30,7 +30,9 @@ export const chatRequestSchema = z.object({
     })
   ),
   settings: z.object({
-    model: z.enum(AVAILABLE_MODEL_VALUES).default(AVAILABLE_MODELS.GPT_4O),
+    model: z
+      .enum(OPENAI_AVAILABLE_MODEL_VALUES)
+      .default(OPENAI_AVAILABLE_MODELS.GPT_4O),
     temperature: z
       .number()
       .min(MIN_TEMPERATURE)

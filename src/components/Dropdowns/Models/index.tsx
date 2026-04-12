@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Box, ChevronDown, Check } from 'lucide-react';
-import type { AvailableModels } from '@/constants/LLMs/openai/availableModels';
-import { MODEL_OPTIONS } from './config';
+import type { OpenaiAvailableModels } from '@/constants/LLMs/openai/availableModels';
+import { OPENAI_MODEL_OPTIONS } from './config';
 
 type ModelsDropdownProps = {
-  model: AvailableModels;
-  onModelChange: (model: AvailableModels) => void;
+  model: OpenaiAvailableModels;
+  onModelChange: (model: OpenaiAvailableModels) => void;
 };
 
 export default function ModelsDropdown({
@@ -17,7 +17,7 @@ export default function ModelsDropdown({
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const selectedOption = MODEL_OPTIONS.find(
+  const selectedOption = OPENAI_MODEL_OPTIONS.find(
     (option) => option.value === model
   )!;
 
@@ -54,7 +54,7 @@ export default function ModelsDropdown({
 
       {open && (
         <div className="border-border bg-surface absolute top-full right-0 z-50 mt-1.5 w-56 overflow-hidden rounded-xl border shadow-lg">
-          {MODEL_OPTIONS.map((option) => (
+          {OPENAI_MODEL_OPTIONS.map((option) => (
             <button
               key={option.value}
               type="button"

@@ -12,8 +12,8 @@ import {
   DEFAULT_TOP_P,
 } from '@/constants/LLMs/settings';
 import {
-  AVAILABLE_MODELS,
-  AvailableModels,
+  OPENAI_AVAILABLE_MODELS,
+  OpenaiAvailableModels,
 } from '@/constants/LLMs/openai/availableModels';
 
 export default function Practice() {
@@ -28,7 +28,9 @@ export default function Practice() {
   const [presencePenalty, setPresencePenalty] = useState(
     DEFAULT_PRESENCE_PENALTY
   );
-  const [model, setModel] = useState<AvailableModels>(AVAILABLE_MODELS.GPT_4O);
+  const [model, setModel] = useState<OpenaiAvailableModels>(
+    OPENAI_AVAILABLE_MODELS.GPT_4O
+  );
 
   return (
     <div className="bg-surface-alt flex flex-1 flex-col font-sans">

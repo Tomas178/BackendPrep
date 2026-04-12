@@ -5,8 +5,8 @@ import { errorResponse } from '@/lib/api/errorResponse';
 import { isMessageFlagged } from '@/lib/openai/moderate';
 import { getChatCompletion } from '@/lib/openai/getChatCompletion';
 import {
-  getInputTokenPrice,
-  getOutputTokenPrice,
+  getOpenaiInputTokenPrice,
+  getOpenaiOutputTokenPrice,
 } from '@/constants/LLMs/openai/modelsPricings';
 import { ROLES } from '@/constants/LLMs/roles';
 
@@ -43,8 +43,9 @@ export async function POST(req: NextRequest) {
             promptTokens: usage.prompt_tokens,
             completionTokens: usage.completion_tokens,
             cost:
-              usage.prompt_tokens * getInputTokenPrice(settings.model) +
-              usage.completion_tokens * getOutputTokenPrice(settings.model),
+              usage.prompt_tokens * getOpenaiInputTokenPrice(settings.model) +
+              usage.completion_tokens *
+                getOpenaiOutputTokenPrice(settings.model),
           }
         : undefined,
     });
