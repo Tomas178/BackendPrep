@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 export type SliderProps = {
   label: string;
   parameter: number;
@@ -21,13 +23,41 @@ export default function Slider({
   explanatoryTextForMaxValue,
   fixed = true,
 }: SliderProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+
+  const displayValue = fixed ? parameter.toFixed(2) : String(parameter);
+
+  function commitValue() {
+    setIsEditing(false);
+    const val = parseFloat(inputValue);
+    if (!isNaN(val)) {
+      onParameterChange(Math.min(maxValue, Math.max(minValue, val)));
+    }
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between">
         <label className="text-primary text-xs font-medium">{label}</label>
-        <span className="bg-surface-alt text-primary rounded-md px-2 py-0.5 font-mono text-xs tabular-nums">
-          {fixed ? parameter.toFixed(2) : parameter}
-        </span>
+        <input
+          type="number"
+          min={minValue}
+          max={maxValue}
+          step={stepValue}
+          value={isEditing ? inputValue : displayValue}
+          onFocus={(e) => {
+            setIsEditing(true);
+            setInputValue(displayValue);
+            e.target.select();
+          }}
+          onChange={(e) => setInputValue(e.target.value)}
+          onBlur={commitValue}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') e.currentTarget.blur();
+          }}
+          className="bg-surface-alt text-primary focus:ring-accent w-16 [appearance:textfield] rounded-md border-0 px-2 py-0.5 text-right font-mono text-xs tabular-nums outline-none focus:ring-1 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        />
       </div>
       <input
         type="range"
