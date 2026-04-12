@@ -14,7 +14,11 @@ import {
   MIN_TEMPERATURE,
   MIN_TOP_P,
 } from '@/constants/openai/settings';
-import { ROLES } from '@/constants/roles';
+import {
+  AVAILABLE_MODEL_VALUES,
+  AVAILABLE_MODELS,
+} from '@/constants/openai/enums/availableModels';
+import { ROLES } from '@/constants/openai/enums/roles';
 import * as z from 'zod';
 import { MAX_FREQUENCY_PENALTY } from '@/constants/openai/settings';
 
@@ -26,6 +30,7 @@ export const chatRequestSchema = z.object({
     })
   ),
   settings: z.object({
+    model: z.enum(AVAILABLE_MODEL_VALUES).default(AVAILABLE_MODELS.GPT_4O),
     temperature: z
       .number()
       .min(MIN_TEMPERATURE)

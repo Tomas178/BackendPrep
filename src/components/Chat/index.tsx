@@ -1,6 +1,6 @@
 'use client';
 
-import { ROLES } from '@/constants/roles';
+import { ROLES } from '@/constants/openai/enums/roles';
 import type { ChatMessage, ChatSettings, UsageData } from '@/types/chat';
 import { USAGE_SEPARATOR } from '@/lib/openai/toReadableStream';
 import MessageBox from './MessageBox';
@@ -159,7 +159,7 @@ export default function Chat({ settings }: ChatProps) {
           <button
             type="submit"
             disabled={isLoading || !input.trim()}
-            className="bg-accent text-accent-foreground rounded-xl px-4 py-3 text-sm font-medium transition-colors hover:opacity-90 disabled:opacity-50"
+            className="bg-accent text-accent-foreground cursor-pointer rounded-xl px-4 py-3 text-sm font-medium transition-colors hover:opacity-90 disabled:opacity-50"
           >
             Send
           </button>

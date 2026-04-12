@@ -1,6 +1,8 @@
-import { RolesWithoutSystem } from '@/constants/roles';
+import { AvailableModels } from '@/constants/openai/enums/availableModels';
+import { RolesWithoutSystem } from '@/constants/openai/enums/roles';
 
 export type ChatSettings = {
+  model: AvailableModels;
   temperature: number;
   topP: number;
   maxOutputTokens: number;

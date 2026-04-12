@@ -1,13 +1,11 @@
 import { INTERVIEW_SYSTEM_PROMPT } from '@/constants/openai/prompts';
 import { openai } from '@/lib/openai/client';
-import { ROLES } from '@/constants/roles';
+import { ROLES } from '@/constants/openai/enums/roles';
 import type { ChatMessage, ChatSettings } from '@/types/chat';
-
-const OPENAI_MODEL = 'gpt-4o';
 
 export function getChatStream(messages: ChatMessage[], settings: ChatSettings) {
   return openai().chat.completions.create({
-    model: OPENAI_MODEL,
+    model: settings.model,
     messages: [
       { role: ROLES.SYSTEM, content: INTERVIEW_SYSTEM_PROMPT },
       ...messages,

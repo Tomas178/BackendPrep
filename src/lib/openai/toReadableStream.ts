@@ -1,13 +1,15 @@
 import type OpenAI from 'openai';
 import {
-  INPUT_TOKEN_PRICE,
-  OUTPUT_TOKEN_PRICE,
-} from '@/constants/openai/pricing';
+  getInputTokenPrice,
+  getOutputTokenPrice,
+} from '@/constants/openai/enums/modelsPricings';
+import { AvailableModels } from '@/constants/openai/enums/availableModels';
 
 export const USAGE_SEPARATOR = '\0';
 
 export function toReadableStream(
-  stream: AsyncIterable<OpenAI.Chat.Completions.ChatCompletionChunk>
+  stream: AsyncIterable<OpenAI.Chat.Completions.ChatCompletionChunk>,
+  model: AvailableModels
 ) {
   const encoder = new TextEncoder();
 
@@ -27,8 +29,8 @@ export function toReadableStream(
 
       if (usage) {
         const cost =
-          usage.prompt_tokens * INPUT_TOKEN_PRICE +
-          usage.completion_tokens * OUTPUT_TOKEN_PRICE;
+          usage.prompt_tokens * getInputTokenPrice(model) +
+          usage.completion_tokens * getOutputTokenPrice(model);
 
         const usageData = JSON.stringify({
           promptTokens: usage.prompt_tokens,

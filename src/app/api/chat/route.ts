@@ -5,7 +5,7 @@ import { errorResponse } from '@/lib/api/errorResponse';
 import { isMessageFlagged } from '@/lib/openai/moderate';
 import { getChatStream } from '@/lib/openai/getChatStream';
 import { toReadableStream } from '@/lib/openai/toReadableStream';
-import { ROLES } from '@/constants/roles';
+import { ROLES } from '@/constants/openai/enums/roles';
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { messages, settings } = result.data;
+    console.log(settings);
 
     const lastMessage = messages[messages.length - 1];
     if (
@@ -31,7 +32,7 @@ export async function POST(req: NextRequest) {
 
     const stream = await getChatStream(messages, settings);
 
-    return new Response(toReadableStream(stream), {
+    return new Response(toReadableStream(stream, settings.model), {
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
     });
   } catch {
