@@ -24,8 +24,8 @@ export default function Slider({
   return (
     <div>
       <div className="flex items-center justify-between">
-        <label className="text-secondary text-xs font-medium">{label}</label>
-        <span className="text-muted text-xs">
+        <label className="text-primary text-xs font-medium">{label}</label>
+        <span className="bg-surface-alt text-primary rounded-md px-2 py-0.5 font-mono text-xs tabular-nums">
           {fixed ? parameter.toFixed(2) : parameter}
         </span>
       </div>
@@ -36,9 +36,9 @@ export default function Slider({
         step={stepValue}
         value={parameter}
         onChange={(e) => onParameterChange(parseFloat(e.target.value))}
-        className="accent-accent mt-1 w-full"
+        className="slider mt-2 w-full"
       />
-      <div className="text-muted flex justify-between text-[10px]">
+      <div className="text-muted mt-1 flex justify-between text-[10px]">
         <span>{explanatoryTextForMinValue}</span>
         <span>{explanatoryTextForMaxValue}</span>
       </div>

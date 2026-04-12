@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Chat from '@/components/Chat';
-import SettingsDropdown from '@/components/SettingsDropdown';
-import ModelsDropdown from '@/components/ModelsDropdown';
+import SettingsDropdown from '@/components/Dropdowns/Settings';
+import ModelsDropdown from '@/components/Dropdowns/Models';
 import {
   DEFAULT_FREQUENCY_PENALTY,
   DEFAULT_MAX_OUTPUT_TOKENS,
@@ -32,28 +32,27 @@ export default function Practice() {
 
   return (
     <div className="bg-surface-alt flex flex-1 flex-col font-sans">
-      <div className="border-border bg-surface flex items-center gap-4 border-b px-4 py-2">
-        <div className="mx-auto flex w-full max-w-3xl items-center gap-4">
+      <div className="border-border bg-surface border-b px-4 py-2">
+        <div className="mx-auto flex max-w-3xl items-center justify-between">
+          <SettingsDropdown
+            values={{
+              temperature,
+              topP,
+              maxOutputTokens,
+              frequencyPenalty,
+              presencePenalty,
+            }}
+            onChange={{
+              temperature: setTemperature,
+              topP: setTopP,
+              maxOutputTokens: setMaxOutputTokens,
+              frequencyPenalty: setFrequencyPenalty,
+              presencePenalty: setPresencePenalty,
+            }}
+          />
           <ModelsDropdown model={model} onModelChange={setModel} />
         </div>
       </div>
-
-      <SettingsDropdown
-        values={{
-          temperature,
-          topP,
-          maxOutputTokens,
-          frequencyPenalty,
-          presencePenalty,
-        }}
-        onChange={{
-          temperature: setTemperature,
-          topP: setTopP,
-          maxOutputTokens: setMaxOutputTokens,
-          frequencyPenalty: setFrequencyPenalty,
-          presencePenalty: setPresencePenalty,
-        }}
-      />
 
       <Chat
         settings={{
