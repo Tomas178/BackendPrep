@@ -3,6 +3,7 @@
 import { ROLES } from '@/constants/roles';
 import type { ChatMessage, ChatSettings, UsageData } from '@/types/chat';
 import { USAGE_SEPARATOR } from '@/lib/openai/toReadableStream';
+import MessageBox from './MessageBox';
 import { useState, useRef, useEffect, useMemo, KeyboardEvent } from 'react';
 
 type ChatProps = {
@@ -126,28 +127,7 @@ export default function Chat({ settings }: ChatProps) {
         ) : (
           <div className="mx-auto max-w-3xl space-y-4 py-6">
             {messages.map((msg, i) => (
-              <div
-                key={i}
-                className={`flex ${msg.role === ROLES.USER ? 'justify-end' : 'justify-start'}`}
-              >
-                <div>
-                  <div
-                    className={`max-w-[80%] rounded-2xl px-4 py-3 text-sm whitespace-pre-wrap ${
-                      msg.role === ROLES.USER
-                        ? 'bg-accent text-accent-foreground'
-                        : 'border-border bg-surface text-primary border'
-                    }`}
-                  >
-                    {msg.content || <span className="animate-pulse">...</span>}
-                  </div>
-                  {msg.usage && (
-                    <p className="text-muted mt-1 px-1 text-xs">
-                      {msg.usage.promptTokens + msg.usage.completionTokens}{' '}
-                      tokens &middot; ${msg.usage.cost.toFixed(4)}
-                    </p>
-                  )}
-                </div>
-              </div>
+              <MessageBox key={i} message={msg} />
             ))}
             <div ref={messagesEndRef} />
           </div>
