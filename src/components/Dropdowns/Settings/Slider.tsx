@@ -10,6 +10,7 @@ export type SliderProps = {
   explanatoryTextForMinValue: string;
   explanatoryTextForMaxValue: string;
   fixed?: boolean;
+  disabled?: boolean;
 };
 
 export default function Slider({
@@ -22,6 +23,7 @@ export default function Slider({
   explanatoryTextForMinValue,
   explanatoryTextForMaxValue,
   fixed = true,
+  disabled = false,
 }: SliderProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -37,7 +39,7 @@ export default function Slider({
   }
 
   return (
-    <div>
+    <div className={disabled ? 'opacity-40' : ''}>
       <div className="flex items-center justify-between">
         <label className="text-primary text-xs font-medium">{label}</label>
         <input
@@ -45,6 +47,7 @@ export default function Slider({
           min={minValue}
           max={maxValue}
           step={stepValue}
+          disabled={disabled}
           value={isEditing ? inputValue : displayValue}
           onFocus={(e) => {
             setIsEditing(true);
@@ -64,6 +67,7 @@ export default function Slider({
         min={minValue}
         max={maxValue}
         step={stepValue}
+        disabled={disabled}
         value={parameter}
         onChange={(e) => onParameterChange(parseFloat(e.target.value))}
         className="slider mt-2 w-full"

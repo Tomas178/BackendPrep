@@ -1,4 +1,5 @@
 import type { SliderProps } from './Slider';
+import { AVAILABLE_LLMS } from '@/constants/LLMs/availableLLMs';
 import {
   MAX_FREQUENCY_PENALTY,
   MAX_MAX_OUTPUT_TOKENS,
@@ -21,9 +22,10 @@ export type SettingKey =
 
 export type SliderConfig = Omit<
   SliderProps,
-  'parameter' | 'onParameterChange'
+  'parameter' | 'onParameterChange' | 'disabled'
 > & {
   key: SettingKey;
+  unsupportedProviders?: string[];
 };
 
 export const SLIDER_CONFIGS: SliderConfig[] = [
@@ -63,6 +65,7 @@ export const SLIDER_CONFIGS: SliderConfig[] = [
     stepValue: 0.01,
     explanatoryTextForMinValue: 'Repetitive',
     explanatoryTextForMaxValue: 'Varied',
+    unsupportedProviders: [AVAILABLE_LLMS.ANTHROPIC],
   },
   {
     key: 'presencePenalty',
@@ -72,5 +75,6 @@ export const SLIDER_CONFIGS: SliderConfig[] = [
     stepValue: 0.01,
     explanatoryTextForMinValue: 'Focused',
     explanatoryTextForMaxValue: 'Exploratory',
+    unsupportedProviders: [AVAILABLE_LLMS.ANTHROPIC],
   },
 ];

@@ -2,12 +2,27 @@ import {
   OPENAI_AVAILABLE_MODELS,
   type OpenaiAvailableModels,
 } from '@/constants/LLMs/openai/availableModels';
+import {
+  ANTHROPIC_AVAILABLE_MODELS,
+  type AnthropicAvailableModels,
+} from '@/constants/LLMs/anthropic/availableModels';
+import {
+  GOOGLE_AVAILABLE_MODELS,
+  type GoogleAvailableModels,
+} from '@/constants/LLMs/google/availableModels';
+import {
+  AVAILABLE_LLMS,
+  type AvailableLLMs,
+} from '@/constants/LLMs/availableLLMs';
+import type { AllModels } from '@/constants/LLMs/allModels';
 
-export const OPENAI_MODEL_OPTIONS: {
-  value: OpenaiAvailableModels;
+type ModelOption<T extends AllModels = AllModels> = {
+  value: T;
   label: string;
   description: string;
-}[] = [
+};
+
+const OPENAI_MODEL_OPTIONS: ModelOption<OpenaiAvailableModels>[] = [
   {
     value: OPENAI_AVAILABLE_MODELS.GPT_4_1,
     label: 'GPT-4.1',
@@ -34,3 +49,45 @@ export const OPENAI_MODEL_OPTIONS: {
     description: 'Fast + affordable',
   },
 ];
+
+const ANTHROPIC_MODEL_OPTIONS: ModelOption<AnthropicAvailableModels>[] = [
+  {
+    value: ANTHROPIC_AVAILABLE_MODELS.CLAUDE_OPUS_4_6,
+    label: 'Claude Opus 4.6',
+    description: 'Most capable',
+  },
+  {
+    value: ANTHROPIC_AVAILABLE_MODELS.CLAUDE_SONNET_4_6,
+    label: 'Claude Sonnet 4.6',
+    description: 'Balanced',
+  },
+  {
+    value: ANTHROPIC_AVAILABLE_MODELS.CLAUDE_HAIKU_4_5,
+    label: 'Claude Haiku 4.5',
+    description: 'Fastest',
+  },
+];
+
+const GOOGLE_MODEL_OPTIONS: ModelOption<GoogleAvailableModels>[] = [
+  {
+    value: GOOGLE_AVAILABLE_MODELS.GEMINI_2_5_FLASH,
+    label: 'Gemini 2.5 Flash',
+    description: 'Most capable',
+  },
+  {
+    value: GOOGLE_AVAILABLE_MODELS.GEMINI_2_5_FLASH_LITE,
+    label: 'Gemini 2.5 Flash Lite',
+    description: 'Balanced',
+  },
+  {
+    value: GOOGLE_AVAILABLE_MODELS.GEMINI_2_5_FLASH_LITE_PREVIEW,
+    label: 'Gemini 2.5 Flash Lite Preview',
+    description: 'Preview',
+  },
+];
+
+export const MODEL_OPTIONS: Record<AvailableLLMs, ModelOption[]> = {
+  [AVAILABLE_LLMS.OPENAI]: OPENAI_MODEL_OPTIONS,
+  [AVAILABLE_LLMS.ANTHROPIC]: ANTHROPIC_MODEL_OPTIONS,
+  [AVAILABLE_LLMS.GOOGLE]: GOOGLE_MODEL_OPTIONS,
+};

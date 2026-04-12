@@ -2,15 +2,21 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Settings as SettingsIcon, ChevronDown } from 'lucide-react';
+import type { AvailableLLMs } from '@/constants/LLMs/availableLLMs';
 import Slider from './Slider';
 import { SLIDER_CONFIGS, type SettingKey } from './config';
 
 type SettingsProps = {
+  provider: AvailableLLMs;
   values: Record<SettingKey, number>;
   onChange: Record<SettingKey, (value: number) => void>;
 };
 
-export default function Settings({ values, onChange }: SettingsProps) {
+export default function Settings({
+  provider,
+  values,
+  onChange,
+}: SettingsProps) {
   const [showSettings, setShowSettings] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -52,14 +58,17 @@ export default function Settings({ values, onChange }: SettingsProps) {
       {showSettings && (
         <div className="border-border bg-surface absolute top-full left-0 z-50 mt-1.5 w-80 rounded-xl border p-4 shadow-lg">
           <div className="space-y-4">
-            {SLIDER_CONFIGS.map(({ key, ...sliderProps }) => (
-              <Slider
-                key={key}
-                {...sliderProps}
-                parameter={values[key]}
-                onParameterChange={onChange[key]}
-              />
-            ))}
+            {SLIDER_CONFIGS.map(
+              ({ key, unsupportedProviders, ...sliderProps }) => (
+                <Slider
+                  key={key}
+                  {...sliderProps}
+                  parameter={values[key]}
+                  onParameterChange={onChange[key]}
+                  disabled={unsupportedProviders?.includes(provider)}
+                />
+              )
+            )}
           </div>
         </div>
       )}

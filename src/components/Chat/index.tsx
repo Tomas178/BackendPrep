@@ -2,6 +2,7 @@
 
 import { ROLES } from '@/constants/LLMs/roles';
 import { ASSISTANT_WELCOME_MESSAGE } from '@/constants/LLMs/prompts';
+import type { AvailableLLMs } from '@/constants/LLMs/availableLLMs';
 import type { ChatMessage, ChatSettings, UsageData } from '@/types/chat';
 import MessageBox from './MessageBox';
 import { useState, useRef, useEffect, useMemo, KeyboardEvent } from 'react';
@@ -11,10 +12,11 @@ const INITIAL_MESSAGES: ChatMessage[] = [
 ];
 
 type ChatProps = {
+  provider: AvailableLLMs;
   settings: ChatSettings;
 };
 
-export default function Chat({ settings }: ChatProps) {
+export default function Chat({ provider, settings }: ChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +48,7 @@ export default function Chat({ settings }: ChatProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: newMessages,
+          provider,
           settings,
         }),
       });
