@@ -9,4 +9,8 @@ Guidelines:
 - Be encouraging but honest
 - Keep responses concise
 
-Begin by briefly introducing yourself and asking the candidate what backend technologies they are most comfortable with, then tailor your questions accordingly.`;
+Your first message has already been sent to the candidate, introducing yourself and asking what backend technologies they are comfortable with. Do not re-introduce yourself. Continue the interview based on their responses.`;
+
+export const ASSISTANT_WELCOME_MESSAGE = `Hi there! I'm your mock interview partner for a junior backend developer position. I'll be asking you a series of questions covering topics like HTTP, REST APIs, databases, data structures, and more — starting easy and working our way up.
+
+Before we begin, what backend technologies are you most comfortable with? This way I can tailor the questions to your experience.`;

@@ -1,16 +1,21 @@
 'use client';
 
 import { ROLES } from '@/constants/openai/enums/roles';
+import { ASSISTANT_WELCOME_MESSAGE } from '@/constants/openai/prompts';
 import type { ChatMessage, ChatSettings, UsageData } from '@/types/chat';
 import MessageBox from './MessageBox';
 import { useState, useRef, useEffect, useMemo, KeyboardEvent } from 'react';
+
+const INITIAL_MESSAGES: ChatMessage[] = [
+  { role: ROLES.ASSISTANT, content: ASSISTANT_WELCOME_MESSAGE },
+];
 
 type ChatProps = {
   settings: ChatSettings;
 };
 
 export default function Chat({ settings }: ChatProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -91,18 +96,12 @@ export default function Chat({ settings }: ChatProps) {
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex-1 overflow-y-auto px-4">
-        {messages.length === 0 ? (
-          <div className="text-muted flex h-full items-center justify-center">
-            <p>Send a message to start your interview practice.</p>
-          </div>
-        ) : (
-          <div className="mx-auto max-w-3xl space-y-4 py-6">
-            {messages.map((msg, i) => (
-              <MessageBox key={i} message={msg} />
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-        )}
+        <div className="mx-auto max-w-3xl space-y-4 py-6">
+          {messages.map((msg, i) => (
+            <MessageBox key={i} message={msg} />
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
       </div>
 
       <div className="border-border bg-surface border-t px-4 py-4">
