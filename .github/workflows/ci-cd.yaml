@@ -100,7 +100,7 @@ jobs:
                 "MAIL_HOST": "${{ vars.MAIL_HOST }}",
                 "MAIL_PORT": "${{ vars.MAIL_PORT }}",
                 "MAIL_SECURE": "${{ vars.MAIL_SECURE }}",
-                "EMAIL": "${{ secrets.EMAIL }}",
+                "EMAIL": "${{ vars.EMAIL }}",
                 "EMAIL_APP_PASS": "${{ secrets.EMAIL_APP_PASS }}"
               }
             }
