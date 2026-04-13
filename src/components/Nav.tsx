@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { ROUTES } from '@/constants/routes';
 import { authClient } from '@/lib/auth-client';
+import ThemeToggle from './ThemeToggle';
 
 const navItems = [ROUTES.HOME, ROUTES.PRACTICE];
 
@@ -64,6 +65,9 @@ export default function Nav() {
             )}
           </li>
         )}
+        <li>
+          <ThemeToggle />
+        </li>
       </ul>
     </nav>
   );
