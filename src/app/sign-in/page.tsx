@@ -26,7 +26,11 @@ export default function SignIn() {
     });
 
     if (error) {
-      setError(error.message ?? 'Sign in failed');
+      if (error.status === 403) {
+        setError('Please verify your email address before signing in.');
+      } else {
+        setError(error.message ?? 'Sign in failed');
+      }
       setLoading(false);
     } else {
       router.push(ROUTES.PRACTICE.path);
@@ -77,7 +81,7 @@ export default function SignIn() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-accent text-accent-foreground w-full rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:opacity-90 disabled:opacity-50"
+            className="bg-accent text-accent-foreground w-full cursor-pointer rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:opacity-90 disabled:opacity-50"
           >
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
@@ -92,7 +96,7 @@ export default function SignIn() {
           Don&apos;t have an account?{' '}
           <Link
             href={ROUTES.SIGN_UP.path}
-            className="text-primary font-medium underline"
+            className="text-primary cursor-pointer font-medium underline"
           >
             Sign Up
           </Link>

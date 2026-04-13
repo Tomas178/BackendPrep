@@ -2,18 +2,17 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 import { ROUTES } from '@/constants/routes';
 import OAuthButtons from '@/components/OAuthButtons';
 
 export default function SignUp() {
-  const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -31,8 +30,31 @@ export default function SignUp() {
       setError(error.message ?? 'Sign up failed');
       setLoading(false);
     } else {
-      router.push(ROUTES.PRACTICE.path);
+      setEmailSent(true);
+      setLoading(false);
     }
+  }
+
+  if (emailSent) {
+    return (
+      <div className="bg-surface-alt flex flex-1 items-center justify-center font-sans">
+        <div className="border-border bg-surface w-full max-w-sm rounded-xl border p-8 text-center shadow-sm">
+          <h1 className="text-primary text-2xl font-bold tracking-tight">
+            Check your email
+          </h1>
+          <p className="text-secondary mt-3 text-sm">
+            We sent a verification link to <strong>{email}</strong>. Click the
+            link to verify your account.
+          </p>
+          <Link
+            href={ROUTES.SIGN_IN.path}
+            className="text-primary mt-4 inline-block text-sm font-medium underline"
+          >
+            Back to Sign In
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -95,7 +117,7 @@ export default function SignUp() {
           <button
             type="submit"
             disabled={loading}
-            className="bg-accent text-accent-foreground w-full rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:opacity-90 disabled:opacity-50"
+            className="bg-accent text-accent-foreground w-full cursor-pointer rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:opacity-90 disabled:opacity-50"
           >
             {loading ? 'Creating account...' : 'Sign Up'}
           </button>
@@ -110,7 +132,7 @@ export default function SignUp() {
           Already have an account?{' '}
           <Link
             href={ROUTES.SIGN_IN.path}
-            className="text-primary font-medium underline"
+            className="text-primary cursor-pointer font-medium underline"
           >
             Sign In
           </Link>

@@ -26,6 +26,16 @@ const schema = z
           .min(1, 'GITHUB_OAUTH_CLIENT_SECRET is required'),
       }),
     }),
+    mail: z.object({
+      host: z.string().min(1, 'MAIL_HOST is required'),
+      port: z.coerce.number().default(1025),
+      secure: z
+        .enum(['true', 'false'])
+        .default('false')
+        .transform((v) => v === 'true'),
+      email: z.string().min(1, 'EMAIL is required'),
+      appPassword: z.string().min(1, 'EMAIL_APP_PASS is required'),
+    }),
     auth: z.object({
       openai: z.object({
         apiKey: z.string().min(1, 'OPENAI_API_KEY is required'),
@@ -61,6 +71,13 @@ export default function config() {
           clientId: process.env.OAUTH_GITHUB_CLIENT_ID,
           clientSecret: process.env.OAUTH_GITHUB_CLIENT_SECRET,
         },
+      },
+      mail: {
+        host: process.env.MAIL_HOST,
+        port: process.env.MAIL_PORT,
+        secure: process.env.MAIL_SECURE,
+        email: process.env.EMAIL,
+        appPassword: process.env.EMAIL_APP_PASS,
       },
       auth: {
         openai: {
