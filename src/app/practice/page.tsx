@@ -13,26 +13,28 @@ import {
   DEFAULT_TEMPERATURE,
   DEFAULT_TOP_P,
 } from '@/constants/LLMs/settings';
-import { OPENAI_AVAILABLE_MODELS } from '@/constants/LLMs/openai/availableModels';
-import { ANTHROPIC_AVAILABLE_MODELS } from '@/constants/LLMs/anthropic/availableModels';
-import { GOOGLE_AVAILABLE_MODELS } from '@/constants/LLMs/google/availableModels';
 import {
   AVAILABLE_LLMS,
   type AvailableLLMs,
 } from '@/constants/LLMs/availableLLMs';
-import type { AllModels } from '@/constants/LLMs/allModels';
+import {
+  ALL_AVAILABLE_MODELS,
+  type AllModels,
+} from '@/constants/LLMs/allModels';
 
 const DEFAULT_MODELS: Record<AvailableLLMs, AllModels> = {
-  [AVAILABLE_LLMS.OPENAI]: OPENAI_AVAILABLE_MODELS.GPT_4O,
-  [AVAILABLE_LLMS.ANTHROPIC]: ANTHROPIC_AVAILABLE_MODELS.CLAUDE_SONNET_4_6,
-  [AVAILABLE_LLMS.GOOGLE]: GOOGLE_AVAILABLE_MODELS.GEMINI_2_5_FLASH,
+  [AVAILABLE_LLMS.OPENAI]: ALL_AVAILABLE_MODELS.OPENAI.GPT_4O,
+  [AVAILABLE_LLMS.ANTHROPIC]: ALL_AVAILABLE_MODELS.ANTHROPIC.CLAUDE_SONNET_4_6,
+  [AVAILABLE_LLMS.GOOGLE]: ALL_AVAILABLE_MODELS.GOOGLE.GEMINI_2_5_FLASH,
 };
 
 export default function Practice() {
   const [provider, setProvider] = useState<AvailableLLMs>(
     AVAILABLE_LLMS.OPENAI
   );
-  const [model, setModel] = useState<AllModels>(OPENAI_AVAILABLE_MODELS.GPT_4O);
+  const [model, setModel] = useState<AllModels>(
+    ALL_AVAILABLE_MODELS.OPENAI.GPT_4O
+  );
   const [temperature, setTemperature] = useState(DEFAULT_TEMPERATURE);
   const [topP, setTopP] = useState(DEFAULT_TOP_P);
   const [maxOutputTokens, setMaxOutputTokens] = useState(

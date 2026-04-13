@@ -1,20 +1,14 @@
-import {
-  OPENAI_AVAILABLE_MODELS,
-  type OpenaiAvailableModels,
-} from '@/constants/LLMs/openai/availableModels';
-import {
-  ANTHROPIC_AVAILABLE_MODELS,
-  type AnthropicAvailableModels,
-} from '@/constants/LLMs/anthropic/availableModels';
-import {
-  GOOGLE_AVAILABLE_MODELS,
-  type GoogleAvailableModels,
-} from '@/constants/LLMs/google/availableModels';
+import type { OpenaiAvailableModels } from '@/constants/LLMs/openai/availableModels';
+import type { AnthropicAvailableModels } from '@/constants/LLMs/anthropic/availableModels';
+import type { GoogleAvailableModels } from '@/constants/LLMs/google/availableModels';
 import {
   AVAILABLE_LLMS,
   type AvailableLLMs,
 } from '@/constants/LLMs/availableLLMs';
-import type { AllModels } from '@/constants/LLMs/allModels';
+import {
+  ALL_AVAILABLE_MODELS,
+  type AllModels,
+} from '@/constants/LLMs/allModels';
 
 type ModelOption<T extends AllModels = AllModels> = {
   value: T;
@@ -24,27 +18,27 @@ type ModelOption<T extends AllModels = AllModels> = {
 
 const OPENAI_MODEL_OPTIONS: ModelOption<OpenaiAvailableModels>[] = [
   {
-    value: OPENAI_AVAILABLE_MODELS.GPT_4_1,
+    value: ALL_AVAILABLE_MODELS.OPENAI.GPT_4_1,
     label: 'GPT-4.1',
     description: 'Most capable',
   },
   {
-    value: OPENAI_AVAILABLE_MODELS.GPT_4_1_MINI,
+    value: ALL_AVAILABLE_MODELS.OPENAI.GPT_4_1_MINI,
     label: 'GPT-4.1 mini',
     description: 'Balanced',
   },
   {
-    value: OPENAI_AVAILABLE_MODELS.GPT_4_1_NANO,
+    value: ALL_AVAILABLE_MODELS.OPENAI.GPT_4_1_NANO,
     label: 'GPT-4.1 nano',
     description: 'Fastest',
   },
   {
-    value: OPENAI_AVAILABLE_MODELS.GPT_4O,
+    value: ALL_AVAILABLE_MODELS.OPENAI.GPT_4O,
     label: 'GPT-4o',
     description: 'Vision + audio',
   },
   {
-    value: OPENAI_AVAILABLE_MODELS.GPT_4O_MINI,
+    value: ALL_AVAILABLE_MODELS.OPENAI.GPT_4O_MINI,
     label: 'GPT-4o mini',
     description: 'Fast + affordable',
   },
@@ -52,17 +46,17 @@ const OPENAI_MODEL_OPTIONS: ModelOption<OpenaiAvailableModels>[] = [
 
 const ANTHROPIC_MODEL_OPTIONS: ModelOption<AnthropicAvailableModels>[] = [
   {
-    value: ANTHROPIC_AVAILABLE_MODELS.CLAUDE_OPUS_4_6,
+    value: ALL_AVAILABLE_MODELS.ANTHROPIC.CLAUDE_OPUS_4_6,
     label: 'Claude Opus 4.6',
     description: 'Most capable',
   },
   {
-    value: ANTHROPIC_AVAILABLE_MODELS.CLAUDE_SONNET_4_6,
+    value: ALL_AVAILABLE_MODELS.ANTHROPIC.CLAUDE_SONNET_4_6,
     label: 'Claude Sonnet 4.6',
     description: 'Balanced',
   },
   {
-    value: ANTHROPIC_AVAILABLE_MODELS.CLAUDE_HAIKU_4_5,
+    value: ALL_AVAILABLE_MODELS.ANTHROPIC.CLAUDE_HAIKU_4_5,
     label: 'Claude Haiku 4.5',
     description: 'Fastest',
   },
@@ -70,12 +64,12 @@ const ANTHROPIC_MODEL_OPTIONS: ModelOption<AnthropicAvailableModels>[] = [
 
 const GOOGLE_MODEL_OPTIONS: ModelOption<GoogleAvailableModels>[] = [
   {
-    value: GOOGLE_AVAILABLE_MODELS.GEMINI_2_5_FLASH,
+    value: ALL_AVAILABLE_MODELS.GOOGLE.GEMINI_2_5_FLASH,
     label: 'Gemini 2.5 Flash',
     description: 'Most capable',
   },
   {
-    value: GOOGLE_AVAILABLE_MODELS.GEMINI_2_5_FLASH_LITE,
+    value: ALL_AVAILABLE_MODELS.GOOGLE.GEMINI_2_5_FLASH_LITE,
     label: 'Gemini 2.5 Flash Lite',
     description: 'Balanced',
   },

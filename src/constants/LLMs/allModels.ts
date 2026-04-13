@@ -1,7 +1,16 @@
-import { ANTHROPIC_AVAILABLE_MODELS_VALUES } from './anthropic/availableModels';
+import {
+  ANTHROPIC_AVAILABLE_MODELS,
+  ANTHROPIC_AVAILABLE_MODELS_VALUES,
+} from './anthropic/availableModels';
 import { AVAILABLE_LLMS } from './availableLLMs';
-import { GOOGLE_AVAILABLE_MODELS_VALUES } from './google/availableModels';
-import { OPENAI_AVAILABLE_MODEL_VALUES } from './openai/availableModels';
+import {
+  GOOGLE_AVAILABLE_MODELS,
+  GOOGLE_AVAILABLE_MODELS_VALUES,
+} from './google/availableModels';
+import {
+  OPENAI_AVAILABLE_MODELS,
+  OPENAI_AVAILABLE_MODEL_VALUES,
+} from './openai/availableModels';
 
 export const ALL_MODEL_VALUES = [
   ...OPENAI_AVAILABLE_MODEL_VALUES,
@@ -16,3 +25,9 @@ export const PROVIDER_MODEL_VALUES = {
   [AVAILABLE_LLMS.GOOGLE]: GOOGLE_AVAILABLE_MODELS_VALUES,
   [AVAILABLE_LLMS.ANTHROPIC]: ANTHROPIC_AVAILABLE_MODELS_VALUES,
 };
+
+export const ALL_AVAILABLE_MODELS = {
+  OPENAI: OPENAI_AVAILABLE_MODELS,
+  ANTHROPIC: ANTHROPIC_AVAILABLE_MODELS,
+  GOOGLE: GOOGLE_AVAILABLE_MODELS,
+} as const;
