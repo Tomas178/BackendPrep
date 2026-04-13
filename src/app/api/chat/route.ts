@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
     const { messages, provider, settings } = result.data;
 
-    const lastMessage = messages[messages.length - 1];
+    const lastMessage = messages.at(-1)!;
     const isFlaggedMessage = await isInappropriateMessage(lastMessage);
     if (isFlaggedMessage) {
       return errorResponse(
