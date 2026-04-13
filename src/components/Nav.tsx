@@ -1,13 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ROUTES } from '@/constants/routes';
+import { authClient } from '@/lib/auth-client';
 
 const navItems = [ROUTES.HOME, ROUTES.PRACTICE];
 
 export default function Nav() {
   const pathname = usePathname() ?? ROUTES.HOME.path;
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
 
   return (
     <nav aria-label="Main navigation">
@@ -34,6 +37,33 @@ export default function Nav() {
             </li>
           );
         })}
+        {!isPending && (
+          <li>
+            {session ? (
+              <button
+                type="button"
+                onClick={async () => {
+                  await authClient.signOut();
+                  router.push(ROUTES.HOME.path);
+                }}
+                className="text-secondary hover:bg-hover cursor-pointer rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4"
+              >
+                Sign Out
+              </button>
+            ) : (
+              <Link
+                href={ROUTES.SIGN_IN.path}
+                className={`rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4 ${
+                  pathname.startsWith(ROUTES.SIGN_IN.path)
+                    ? 'bg-accent text-accent-foreground'
+                    : 'text-secondary hover:bg-hover'
+                }`}
+              >
+                Sign In
+              </Link>
+            )}
+          </li>
+        )}
       </ul>
     </nav>
   );

@@ -4,6 +4,14 @@ const schema = z
   .object({
     env: z.enum(['development', 'production', 'test']).default('development'),
     port: z.coerce.number().default(3000),
+    databaseUrl: z.string().min(1, 'DATABASE_URL is required'),
+    betterAuth: z.object({
+      secret: z
+        .string()
+        .min(32, 'BETTER_AUTH_SECRET must be at least 32 characters'),
+      url: z.url('BETTER_AUTH_URL must be a valid URL'),
+      cookiePrefix: z.string().default('backendprep'),
+    }),
     auth: z.object({
       openai: z.object({
         apiKey: z.string().min(1, 'OPENAI_API_KEY is required'),
@@ -25,6 +33,11 @@ export default function config() {
     cached = schema.parse({
       env: process.env.NODE_ENV,
       port: process.env.PORT,
+      databaseUrl: process.env.DATABASE_URL,
+      betterAuth: {
+        secret: process.env.BETTER_AUTH_SECRET,
+        url: process.env.BETTER_AUTH_URL,
+      },
       auth: {
         openai: {
           apiKey: process.env.OPENAI_API_KEY,
