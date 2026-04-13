@@ -12,6 +12,20 @@ const schema = z
       url: z.url('BETTER_AUTH_URL must be a valid URL'),
       cookiePrefix: z.string().default('backendprep'),
     }),
+    oauth: z.object({
+      google: z.object({
+        clientId: z.string().min(1, 'GOOGLE_OAUTH_CLIENT_ID is required'),
+        clientSecret: z
+          .string()
+          .min(1, 'GOOGLE_OAUTH_CLIENT_SECRET is required'),
+      }),
+      github: z.object({
+        clientId: z.string().min(1, 'GITHUB_OAUTH_CLIENT_ID is required'),
+        clientSecret: z
+          .string()
+          .min(1, 'GITHUB_OAUTH_CLIENT_SECRET is required'),
+      }),
+    }),
     auth: z.object({
       openai: z.object({
         apiKey: z.string().min(1, 'OPENAI_API_KEY is required'),
@@ -37,6 +51,16 @@ export default function config() {
       betterAuth: {
         secret: process.env.BETTER_AUTH_SECRET,
         url: process.env.BETTER_AUTH_URL,
+      },
+      oauth: {
+        google: {
+          clientId: process.env.OAUTH_GOOGLE_CLIENT_ID,
+          clientSecret: process.env.OAUTH_GOOGLE_CLIENT_SECRET,
+        },
+        github: {
+          clientId: process.env.OAUTH_GITHUB_CLIENT_ID,
+          clientSecret: process.env.OAUTH_GITHUB_CLIENT_SECRET,
+        },
       },
       auth: {
         openai: {
