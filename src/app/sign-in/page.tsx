@@ -6,11 +6,13 @@ import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
 import { ROUTES } from '@/constants/routes';
 import OAuthButtons from '@/components/OAuthButtons';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function SignIn() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -67,15 +69,24 @@ export default function SignIn() {
             >
               Password
             </label>
-            <input
-              id="password"
-              type="password"
-              required
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border-border bg-surface text-primary focus:ring-accent mt-1 block w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
-            />
+            <div className="relative mt-1">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                required
+                minLength={8}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="border-border bg-surface text-primary focus:ring-accent block w-full rounded-lg border px-3 py-2 pr-10 text-sm focus:ring-2 focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="text-muted hover:text-secondary absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3"
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
           </div>
           {error && <p className="text-sm text-red-500">{error}</p>}
           <button
