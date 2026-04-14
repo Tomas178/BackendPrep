@@ -13,7 +13,7 @@ export default function OAuthButtons() {
   function handleOAuth(provider: SupportedOAuthProviders) {
     authClient.signIn.social({
       provider,
-      callbackURL: ROUTES.PRACTICE.path,
+      callbackURL: ROUTES.PRACTICE.PATH,
     });
   }
 

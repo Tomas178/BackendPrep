@@ -34,7 +34,7 @@ export default function SignUp() {
       name,
       email,
       password,
-      callbackURL: ROUTES.PRACTICE.path,
+      callbackURL: ROUTES.PRACTICE.PATH,
     });
 
     if (error) {
@@ -54,7 +54,7 @@ export default function SignUp() {
           link to verify your account.
         </p>
         <Link
-          href={ROUTES.SIGN_IN.path}
+          href={ROUTES.SIGN_IN.PATH}
           className="text-primary mt-4 block text-center text-sm font-medium underline"
         >
           Back to Sign In
@@ -115,7 +115,7 @@ export default function SignUp() {
       <p className="text-muted mt-4 text-center text-sm">
         Already have an account?{' '}
         <Link
-          href={ROUTES.SIGN_IN.path}
+          href={ROUTES.SIGN_IN.PATH}
           className="text-primary cursor-pointer font-medium underline"
         >
           Sign In

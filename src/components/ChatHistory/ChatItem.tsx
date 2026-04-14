@@ -1,5 +1,3 @@
-'use client';
-
 import { Trash2 } from 'lucide-react';
 
 type ChatItemProps = {
@@ -37,7 +35,7 @@ export default function ChatItem({
     <button
       type="button"
       onClick={() => onSelect(id)}
-      className={`group flex w-full items-start gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+      className={`group flex w-full cursor-pointer items-start gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
         isActive
           ? 'bg-accent/10 border-accent/30 border'
           : 'hover:bg-hover border border-transparent'
@@ -54,7 +52,7 @@ export default function ChatItem({
 
       <Trash2
         size={14}
-        className="text-muted hover:text-primary mt-0.5 shrink-0 cursor-pointer opacity-0 transition-opacity group-hover:opacity-100"
+        className="text-muted hover:text-primary mt-0.5 shrink-0 cursor-pointer opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-500"
         aria-label="Delete chat"
         onClick={(e) => {
           e.stopPropagation();

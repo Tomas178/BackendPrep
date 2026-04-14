@@ -9,23 +9,23 @@ import ThemeToggle from './ThemeToggle';
 const navItems = [ROUTES.HOME, ROUTES.PRACTICE];
 
 export default function Nav() {
-  const pathname = usePathname() ?? ROUTES.HOME.path;
+  const pathname = usePathname() ?? ROUTES.HOME.PATH;
   const router = useRouter();
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
 
   return (
     <nav aria-label="Main navigation">
       <ul className="flex items-center gap-1 sm:gap-2">
         {navItems.map((item) => {
           const isActive =
-            item.path === ROUTES.HOME.path
-              ? pathname === ROUTES.HOME.path
-              : pathname.startsWith(item.path);
+            item.PATH === ROUTES.HOME.PATH
+              ? pathname === ROUTES.HOME.PATH
+              : pathname.startsWith(item.PATH);
 
           return (
-            <li key={item.path}>
+            <li key={item.PATH}>
               <Link
-                href={item.path}
+                href={item.PATH}
                 aria-current={isActive ? 'page' : undefined}
                 className={`rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4 ${
                   isActive
@@ -33,38 +33,36 @@ export default function Nav() {
                     : 'text-secondary hover:bg-hover'
                 }`}
               >
-                {item.name}
+                {item.NAME}
               </Link>
             </li>
           );
         })}
-        {!isPending && (
-          <li>
-            {session ? (
-              <button
-                type="button"
-                onClick={async () => {
-                  await authClient.signOut();
-                  router.push(ROUTES.HOME.path);
-                }}
-                className="text-secondary hover:bg-hover cursor-pointer rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4"
-              >
-                Sign Out
-              </button>
-            ) : (
-              <Link
-                href={ROUTES.SIGN_IN.path}
-                className={`rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4 ${
-                  pathname.startsWith(ROUTES.SIGN_IN.path)
-                    ? 'bg-accent text-accent-foreground'
-                    : 'text-secondary hover:bg-hover'
-                }`}
-              >
-                Sign In
-              </Link>
-            )}
-          </li>
-        )}
+        <li>
+          {session ? (
+            <button
+              type="button"
+              onClick={async () => {
+                await authClient.signOut();
+                router.push(ROUTES.HOME.PATH);
+              }}
+              className="text-secondary hover:bg-hover cursor-pointer rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4"
+            >
+              Sign Out
+            </button>
+          ) : (
+            <Link
+              href={ROUTES.SIGN_IN.PATH}
+              className={`rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4 ${
+                pathname.startsWith(ROUTES.SIGN_IN.PATH)
+                  ? 'bg-accent text-accent-foreground'
+                  : 'text-secondary hover:bg-hover'
+              }`}
+            >
+              Sign In
+            </Link>
+          )}
+        </li>
         <li>
           <ThemeToggle />
         </li>
