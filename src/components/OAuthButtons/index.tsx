@@ -4,9 +4,13 @@ import Image from 'next/image';
 import { authClient } from '@/lib/auth-client';
 import { ROUTES } from '@/constants/routes';
 import SingleOAuthButton from './SingleOAuthButton';
+import {
+  SUPPORTED_OAUTH_PROVIDERS,
+  type SupportedOAuthProviders,
+} from '@/constants/supportedOAuthProviders';
 
 export default function OAuthButtons() {
-  function handleOAuth(provider: 'google' | 'github') {
+  function handleOAuth(provider: SupportedOAuthProviders) {
     authClient.signIn.social({
       provider,
       callbackURL: ROUTES.PRACTICE.path,
@@ -17,7 +21,7 @@ export default function OAuthButtons() {
     <div className="space-y-2">
       <SingleOAuthButton
         title="Continue with Google"
-        onClick={() => handleOAuth('google')}
+        onClick={() => handleOAuth(SUPPORTED_OAUTH_PROVIDERS.GOOGLE)}
       >
         <Image
           src="/social-logins/Google.png"
@@ -28,7 +32,7 @@ export default function OAuthButtons() {
       </SingleOAuthButton>
       <SingleOAuthButton
         title="Continue with GitHub"
-        onClick={() => handleOAuth('github')}
+        onClick={() => handleOAuth(SUPPORTED_OAUTH_PROVIDERS.GITHUB)}
       >
         <Image
           src="/social-logins/GitHub.png"
