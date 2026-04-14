@@ -11,7 +11,7 @@ const navItems = [ROUTES.HOME, ROUTES.PRACTICE];
 export default function Nav() {
   const pathname = usePathname() ?? ROUTES.HOME.PATH;
   const router = useRouter();
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
 
   return (
     <nav aria-label="Main navigation">
@@ -38,33 +38,31 @@ export default function Nav() {
             </li>
           );
         })}
-        {!isPending && (
-          <li>
-            {session ? (
-              <button
-                type="button"
-                onClick={async () => {
-                  await authClient.signOut();
-                  router.push(ROUTES.HOME.PATH);
-                }}
-                className="text-secondary hover:bg-hover cursor-pointer rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4"
-              >
-                Sign Out
-              </button>
-            ) : (
-              <Link
-                href={ROUTES.SIGN_IN.PATH}
-                className={`rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4 ${
-                  pathname.startsWith(ROUTES.SIGN_IN.PATH)
-                    ? 'bg-accent text-accent-foreground'
-                    : 'text-secondary hover:bg-hover'
-                }`}
-              >
-                Sign In
-              </Link>
-            )}
-          </li>
-        )}
+        <li>
+          {session ? (
+            <button
+              type="button"
+              onClick={async () => {
+                await authClient.signOut();
+                router.push(ROUTES.HOME.PATH);
+              }}
+              className="text-secondary hover:bg-hover cursor-pointer rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4"
+            >
+              Sign Out
+            </button>
+          ) : (
+            <Link
+              href={ROUTES.SIGN_IN.PATH}
+              className={`rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4 ${
+                pathname.startsWith(ROUTES.SIGN_IN.PATH)
+                  ? 'bg-accent text-accent-foreground'
+                  : 'text-secondary hover:bg-hover'
+              }`}
+            >
+              Sign In
+            </Link>
+          )}
+        </li>
         <li>
           <ThemeToggle />
         </li>
