@@ -28,9 +28,10 @@ export default function Chat({
   onUserMessageSent,
   onChatCreated,
 }: ChatProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>(
-    initialMessages?.length ? initialMessages : DEFAULT_MESSAGES
-  );
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    ...DEFAULT_MESSAGES,
+    ...(initialMessages ?? []),
+  ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
