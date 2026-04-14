@@ -9,7 +9,7 @@ import ThemeToggle from './ThemeToggle';
 const navItems = [ROUTES.HOME, ROUTES.PRACTICE];
 
 export default function Nav() {
-  const pathname = usePathname() ?? ROUTES.HOME.path;
+  const pathname = usePathname() ?? ROUTES.HOME.PATH;
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
 
@@ -18,14 +18,14 @@ export default function Nav() {
       <ul className="flex items-center gap-1 sm:gap-2">
         {navItems.map((item) => {
           const isActive =
-            item.path === ROUTES.HOME.path
-              ? pathname === ROUTES.HOME.path
-              : pathname.startsWith(item.path);
+            item.PATH === ROUTES.HOME.PATH
+              ? pathname === ROUTES.HOME.PATH
+              : pathname.startsWith(item.PATH);
 
           return (
-            <li key={item.path}>
+            <li key={item.PATH}>
               <Link
-                href={item.path}
+                href={item.PATH}
                 aria-current={isActive ? 'page' : undefined}
                 className={`rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4 ${
                   isActive
@@ -33,7 +33,7 @@ export default function Nav() {
                     : 'text-secondary hover:bg-hover'
                 }`}
               >
-                {item.name}
+                {item.NAME}
               </Link>
             </li>
           );
@@ -45,7 +45,7 @@ export default function Nav() {
                 type="button"
                 onClick={async () => {
                   await authClient.signOut();
-                  router.push(ROUTES.HOME.path);
+                  router.push(ROUTES.HOME.PATH);
                 }}
                 className="text-secondary hover:bg-hover cursor-pointer rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4"
               >
@@ -53,9 +53,9 @@ export default function Nav() {
               </button>
             ) : (
               <Link
-                href={ROUTES.SIGN_IN.path}
+                href={ROUTES.SIGN_IN.PATH}
                 className={`rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4 ${
-                  pathname.startsWith(ROUTES.SIGN_IN.path)
+                  pathname.startsWith(ROUTES.SIGN_IN.PATH)
                     ? 'bg-accent text-accent-foreground'
                     : 'text-secondary hover:bg-hover'
                 }`}

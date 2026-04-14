@@ -26,7 +26,7 @@ export default function SignIn() {
     const { error } = await authClient.signIn.email({
       email,
       password,
-      callbackURL: ROUTES.PRACTICE.path,
+      callbackURL: ROUTES.PRACTICE.PATH,
     });
 
     if (error) {
@@ -37,7 +37,7 @@ export default function SignIn() {
       }
       setLoading(false);
     } else {
-      router.push(ROUTES.PRACTICE.path);
+      router.push(ROUTES.PRACTICE.PATH);
     }
   }
 
@@ -78,7 +78,7 @@ export default function SignIn() {
       <p className="text-muted mt-4 text-center text-sm">
         Don&apos;t have an account?{' '}
         <Link
-          href={ROUTES.SIGN_UP.path}
+          href={ROUTES.SIGN_UP.PATH}
           className="text-primary cursor-pointer font-medium underline"
         >
           Sign Up

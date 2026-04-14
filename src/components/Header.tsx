@@ -9,7 +9,7 @@ export default function Header() {
     <header className="border-border bg-surface/80 sticky top-0 z-50 border-b backdrop-blur">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <Link
-          href={ROUTES.HOME.path}
+          href={ROUTES.HOME.PATH}
           className="text-primary flex items-center gap-2 text-lg font-semibold tracking-tight"
         >
           <Image

@@ -14,7 +14,7 @@ export default function Home() {
           junior roles. Sharpen your skills and get ready to stand out.
         </p>
         <Link
-          href={ROUTES.PRACTICE.path}
+          href={ROUTES.PRACTICE.PATH}
           className="bg-accent text-accent-foreground mt-8 inline-block rounded-full px-6 py-3 text-sm font-medium transition-colors hover:opacity-90"
         >
           Practice

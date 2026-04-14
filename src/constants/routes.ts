@@ -1,17 +1,17 @@
 import type { ObjectValues } from '@/types/utils';
 
-export interface RouteDefinition {
-  name: string;
-  path: string;
+export interface Route {
+  NAME: string;
+  PATH: string;
 }
 
 export const ROUTES = {
-  HOME: { name: 'Home', path: '/' },
-  PRACTICE: { name: 'Practice', path: '/practice' },
-  SIGN_IN: { name: 'Sign In', path: '/sign-in' },
-  SIGN_UP: { name: 'Sign Up', path: '/sign-up' },
-} as const satisfies Record<string, RouteDefinition>;
+  HOME: { NAME: 'Home', PATH: '/' },
+  PRACTICE: { NAME: 'Practice', PATH: '/practice' },
+  SIGN_IN: { NAME: 'Sign In', PATH: '/sign-in' },
+  SIGN_UP: { NAME: 'Sign Up', PATH: '/sign-up' },
+} as const satisfies Record<string, Route>;
 
 export type AppRoute = ObjectValues<typeof ROUTES>;
-export type RouteName = AppRoute['name'];
-export type RoutePath = AppRoute['path'];
+export type RouteName = AppRoute['NAME'];
+export type RoutePath = AppRoute['PATH'];
