@@ -16,7 +16,7 @@ RUN corepack enable pnpm
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN pnpm build
+RUN --mount=type=secret,id=env_local,target=/app/.env.local pnpm build
 
 FROM base AS runner
 WORKDIR /app

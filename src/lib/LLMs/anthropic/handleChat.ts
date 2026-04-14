@@ -5,12 +5,13 @@ import {
 } from '@/constants/LLMs/anthropic/modelsPricings';
 import type { AnthropicAvailableModels } from '@/constants/LLMs/anthropic/availableModels';
 import type { ChatMessage, ChatResponse, ChatSettings } from '@/types/chat';
+import { anthropic } from './client';
 
 export async function handleAnthropic(
   messages: ChatMessage[],
   settings: ChatSettings
 ): Promise<ChatResponse> {
-  const response = await getChatCompletion(messages, settings);
+  const response = await getChatCompletion(anthropic, messages, settings);
   const textBlock = response.content.find((block) => block.type === 'text');
   const content = textBlock && 'text' in textBlock ? textBlock.text : '';
   const usage = response.usage;

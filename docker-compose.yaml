@@ -2,7 +2,7 @@ name: BackendPrep
 
 services:
   db:
-    image: postgres:17-alpine
+    image: postgres:17.6-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -17,6 +17,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      secrets:
+        - env_local
     image: backendprep
     ports:
       - '3000:3000'
@@ -27,3 +29,7 @@ services:
 
 volumes:
   pgdata:
+
+secrets:
+  env_local:
+    file: .env.local

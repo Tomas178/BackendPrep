@@ -1,13 +1,14 @@
 import { INTERVIEW_SYSTEM_PROMPT } from '@/constants/LLMs/prompts';
-import { openai } from '@/lib/LLMs/openai/client';
 import { ROLES } from '@/constants/LLMs/roles';
 import type { ChatMessage, ChatSettings } from '@/types/chat';
+import type OpenAI from 'openai';
 
 export function getChatCompletion(
+  client: OpenAI,
   messages: ChatMessage[],
   settings: ChatSettings
 ) {
-  return openai().chat.completions.create({
+  return client.chat.completions.create({
     model: settings.model,
     messages: [
       { role: ROLES.SYSTEM, content: INTERVIEW_SYSTEM_PROMPT },

@@ -5,12 +5,13 @@ import {
 import type { GoogleAvailableModels } from '@/constants/LLMs/google/availableModels';
 import type { ChatMessage, ChatSettings, ChatResponse } from '@/types/chat';
 import { getChatCompletion } from './getChatCompletion';
+import { google } from './client';
 
 export async function handleGoogle(
   messages: ChatMessage[],
   settings: ChatSettings
 ): Promise<ChatResponse> {
-  const response = await getChatCompletion(messages, settings);
+  const response = await getChatCompletion(google, messages, settings);
   const content = response.text ?? '';
   const usage = response.usageMetadata;
 

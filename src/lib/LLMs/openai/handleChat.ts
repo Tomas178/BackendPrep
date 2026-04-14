@@ -5,12 +5,13 @@ import {
 } from '@/constants/LLMs/openai/modelsPricings';
 import type { OpenaiAvailableModels } from '@/constants/LLMs/openai/availableModels';
 import type { ChatMessage, ChatSettings, ChatResponse } from '@/types/chat';
+import { openai } from './client';
 
 export async function handleOpenai(
   messages: ChatMessage[],
   settings: ChatSettings
 ): Promise<ChatResponse> {
-  const completion = await getChatCompletion(messages, settings);
+  const completion = await getChatCompletion(openai, messages, settings);
   const content = completion.choices[0]?.message?.content ?? '';
   const usage = completion.usage;
 

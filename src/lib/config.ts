@@ -50,48 +50,42 @@ const schema = z
   })
   .readonly();
 
-let cached: z.infer<typeof schema> | null = null;
+const config = schema.parse({
+  env: process.env.NODE_ENV,
+  port: process.env.PORT,
+  databaseUrl: process.env.DATABASE_URL,
+  betterAuth: {
+    secret: process.env.BETTER_AUTH_SECRET,
+    url: process.env.BETTER_AUTH_URL,
+  },
+  oauth: {
+    google: {
+      clientId: process.env.OAUTH_GOOGLE_CLIENT_ID,
+      clientSecret: process.env.OAUTH_GOOGLE_CLIENT_SECRET,
+    },
+    github: {
+      clientId: process.env.OAUTH_GITHUB_CLIENT_ID,
+      clientSecret: process.env.OAUTH_GITHUB_CLIENT_SECRET,
+    },
+  },
+  mail: {
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
+    secure: process.env.MAIL_SECURE,
+    email: process.env.EMAIL,
+    appPassword: process.env.EMAIL_APP_PASS,
+  },
+  auth: {
+    openai: {
+      apiKey: process.env.OPENAI_API_KEY,
+    },
+    anthropic: {
+      apiKey: process.env.ANTHROPIC_API_KEY,
+    },
+    google: {
+      apiKey: process.env.GOOGLE_API_KEY,
+    },
+  },
+});
 
-export default function config() {
-  if (!cached) {
-    cached = schema.parse({
-      env: process.env.NODE_ENV,
-      port: process.env.PORT,
-      databaseUrl: process.env.DATABASE_URL,
-      betterAuth: {
-        secret: process.env.BETTER_AUTH_SECRET,
-        url: process.env.BETTER_AUTH_URL,
-      },
-      oauth: {
-        google: {
-          clientId: process.env.OAUTH_GOOGLE_CLIENT_ID,
-          clientSecret: process.env.OAUTH_GOOGLE_CLIENT_SECRET,
-        },
-        github: {
-          clientId: process.env.OAUTH_GITHUB_CLIENT_ID,
-          clientSecret: process.env.OAUTH_GITHUB_CLIENT_SECRET,
-        },
-      },
-      mail: {
-        host: process.env.MAIL_HOST,
-        port: process.env.MAIL_PORT,
-        secure: process.env.MAIL_SECURE,
-        email: process.env.EMAIL,
-        appPassword: process.env.EMAIL_APP_PASS,
-      },
-      auth: {
-        openai: {
-          apiKey: process.env.OPENAI_API_KEY,
-        },
-        anthropic: {
-          apiKey: process.env.ANTHROPIC_API_KEY,
-        },
-        google: {
-          apiKey: process.env.GOOGLE_API_KEY,
-        },
-      },
-    });
-  }
-
-  return cached;
-}
+export default config;
