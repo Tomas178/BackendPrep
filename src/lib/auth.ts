@@ -1,14 +1,12 @@
 import { betterAuth } from 'better-auth';
 import { nextCookies } from 'better-auth/next-js';
-import { Pool } from 'pg';
+import { pool } from '@/db';
 import config from '@/lib/config';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
 import { transporter } from '@/lib/email/transporter';
 
 export const auth = betterAuth({
-  database: new Pool({
-    connectionString: config.databaseUrl,
-  }),
+  database: pool,
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
