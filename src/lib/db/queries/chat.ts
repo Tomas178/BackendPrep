@@ -1,5 +1,5 @@
-import { db } from '@/db';
-import { chat, chatMessage } from '@/db/schema';
+import { db } from '@/lib/db';
+import { chat, chatMessage } from '@/lib/db/schema';
 import { eq, and, desc, asc } from 'drizzle-orm';
 
 const MAX_TITLE_LENGTH = 80;

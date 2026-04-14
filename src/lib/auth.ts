@@ -1,6 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { nextCookies } from 'better-auth/next-js';
-import { pool } from '@/db';
+import { pool } from '@/lib/db';
 import config from '@/lib/config';
 import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
 import { transporter } from '@/lib/email/transporter';

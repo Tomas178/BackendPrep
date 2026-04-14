@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { StatusCodes } from 'http-status-codes';
 import { errorResponse } from '@/lib/api/errorResponse';
 import { getSession } from '@/lib/api/getSession';
-import { getChatWithMessages, deleteUserChat } from '@/db/queries/chat';
+import { getChatWithMessages, deleteUserChat } from '@/lib/db/queries/chat';
 
 type Params = { params: Promise<{ chatId: string }> };
 

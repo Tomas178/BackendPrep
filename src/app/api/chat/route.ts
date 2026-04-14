@@ -5,7 +5,7 @@ import { errorResponse } from '@/lib/api/errorResponse';
 import { getSession } from '@/lib/api/getSession';
 import { getResponse } from '@/lib/LLMs/getResponse';
 import { isInappropriateMessage } from '@/lib/LLMs/openai/isInappropriateMessage';
-import { createChat, addMessages, touchChat } from '@/db/queries/chat';
+import { createChat, addMessages, touchChat } from '@/lib/db/queries/chat';
 
 export async function POST(req: NextRequest) {
   try {
