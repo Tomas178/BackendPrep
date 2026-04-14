@@ -1,83 +1,62 @@
-import { pgTable, text, boolean, timestamp, index } from 'drizzle-orm/pg-core';
+import { pgTable, text, boolean, index } from 'drizzle-orm/pg-core';
+import { timestampstz } from './columns.helpers';
+import { myTimestamptz } from './datatypes.helpers';
+import { TABLES } from './tables';
 
-export const user = pgTable('user', {
-  id: text('id').primaryKey().notNull(),
-  name: text('name').notNull(),
-  email: text('email').notNull().unique(),
-  emailVerified: boolean('emailVerified').notNull(),
-  image: text('image'),
-  createdAt: timestamp('createdAt', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  updatedAt: timestamp('updatedAt', { withTimezone: true })
-    .notNull()
-    .defaultNow(),
+export const users = pgTable(TABLES.USERS, {
+  id: text().primaryKey().notNull(),
+  name: text().notNull(),
+  email: text().notNull().unique(),
+  emailVerified: boolean().notNull(),
+  image: text(),
+  ...timestampstz,
 });
 
-export const session = pgTable(
-  'session',
+export const sessions = pgTable(
+  TABLES.SESSIONS,
   {
-    id: text('id').primaryKey().notNull(),
-    expiresAt: timestamp('expiresAt', { withTimezone: true }).notNull(),
-    token: text('token').notNull().unique(),
-    createdAt: timestamp('createdAt', { withTimezone: true })
+    id: text().primaryKey().notNull(),
+    expiresAt: myTimestamptz().notNull(),
+    token: text().notNull().unique(),
+    ...timestampstz,
+    ipAddress: text(),
+    userAgent: text(),
+    userId: text()
       .notNull()
-      .defaultNow(),
-    updatedAt: timestamp('updatedAt', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    ipAddress: text('ipAddress'),
-    userAgent: text('userAgent'),
-    userId: text('userId')
-      .notNull()
-      .references(() => user.id, { onDelete: 'cascade' }),
+      .references(() => users.id, { onDelete: 'cascade' }),
   },
-  (table) => [index('session_userId_idx').on(table.userId)]
+  (table) => [index('sessions_user_id_idx').on(table.userId)]
 );
 
-export const account = pgTable(
-  'account',
+export const accounts = pgTable(
+  TABLES.ACCOUNTS,
   {
-    id: text('id').primaryKey().notNull(),
-    accountId: text('accountId').notNull(),
-    providerId: text('providerId').notNull(),
-    userId: text('userId')
+    id: text().primaryKey().notNull(),
+    accountId: text().notNull(),
+    providerId: text().notNull(),
+    userId: text()
       .notNull()
-      .references(() => user.id, { onDelete: 'cascade' }),
-    accessToken: text('accessToken'),
-    refreshToken: text('refreshToken'),
-    idToken: text('idToken'),
-    accessTokenExpiresAt: timestamp('accessTokenExpiresAt', {
-      withTimezone: true,
-    }),
-    refreshTokenExpiresAt: timestamp('refreshTokenExpiresAt', {
-      withTimezone: true,
-    }),
-    scope: text('scope'),
-    password: text('password'),
-    createdAt: timestamp('createdAt', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    updatedAt: timestamp('updatedAt', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+      .references(() => users.id, { onDelete: 'cascade' }),
+    accessToken: text(),
+    refreshToken: text(),
+    idToken: text(),
+    accessTokenExpiresAt: myTimestamptz(),
+    refreshTokenExpiresAt: myTimestamptz(),
+    scope: text(),
+    password: text(),
+    ...timestampstz,
   },
-  (table) => [index('account_userId_idx').on(table.userId)]
+  (table) => [index('accounts_user_id_idx').on(table.userId)]
 );
 
-export const verification = pgTable(
-  'verification',
+export const verifications = pgTable(
+  TABLES.VERIFICATIONS,
   {
-    id: text('id').primaryKey().notNull(),
-    identifier: text('identifier').notNull(),
-    value: text('value').notNull(),
-    expiresAt: timestamp('expiresAt', { withTimezone: true }).notNull(),
-    createdAt: timestamp('createdAt', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    updatedAt: timestamp('updatedAt', { withTimezone: true })
-      .notNull()
-      .defaultNow(),
+    id: text().primaryKey().notNull(),
+    identifier: text().notNull(),
+    value: text().notNull(),
+    expiresAt: myTimestamptz().notNull(),
+    ...timestampstz,
   },
-  (table) => [index('verification_identifier_idx').on(table.identifier)]
+  (table) => [index('verifications_identifier_idx').on(table.identifier)]
 );

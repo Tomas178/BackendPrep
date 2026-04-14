@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { StatusCodes } from 'http-status-codes';
 import { errorResponse } from '@/lib/api/errorResponse';
 import { getSession } from '@/lib/api/getSession';
-import { getUserChats } from '@/lib/db/queries/chat';
+import { getUserChats } from '@/db/queries/chat';
 
 export async function GET() {
   try {

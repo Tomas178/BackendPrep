@@ -1,26 +1,26 @@
 import { relations } from 'drizzle-orm';
-import { user, session, account } from './auth';
-import { chat, chatMessage } from './chat';
+import { users, sessions, accounts } from './auth';
+import { chats, chatMessages } from './chat';
 
-export const userRelations = relations(user, ({ many }) => ({
-  sessions: many(session),
-  accounts: many(account),
-  chats: many(chat),
+export const usersRelations = relations(users, ({ many }) => ({
+  sessions: many(sessions),
+  accounts: many(accounts),
+  chats: many(chats),
 }));
 
-export const sessionRelations = relations(session, ({ one }) => ({
-  user: one(user, { fields: [session.userId], references: [user.id] }),
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  user: one(users, { fields: [sessions.userId], references: [users.id] }),
 }));
 
-export const accountRelations = relations(account, ({ one }) => ({
-  user: one(user, { fields: [account.userId], references: [user.id] }),
+export const accountsRelations = relations(accounts, ({ one }) => ({
+  user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
 
-export const chatRelations = relations(chat, ({ one, many }) => ({
-  user: one(user, { fields: [chat.userId], references: [user.id] }),
-  messages: many(chatMessage),
+export const chatsRelations = relations(chats, ({ one, many }) => ({
+  user: one(users, { fields: [chats.userId], references: [users.id] }),
+  messages: many(chatMessages),
 }));
 
-export const chatMessageRelations = relations(chatMessage, ({ one }) => ({
-  chat: one(chat, { fields: [chatMessage.chatId], references: [chat.id] }),
+export const chatMessagesRelations = relations(chatMessages, ({ one }) => ({
+  chat: one(chats, { fields: [chatMessages.chatId], references: [chats.id] }),
 }));
