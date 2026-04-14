@@ -24,11 +24,11 @@ export const chat = pgTable(
     createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   },
-  (table) => [index('chat_userId_idx').on(table.userId)]
+  (table) => [index('chat_user_id_idx').on(table.userId)]
 );
 
 export const chatMessage = pgTable(
-  'chatMessage',
+  'chat_message',
   {
     id: uuid().primaryKey().defaultRandom(),
     chatId: uuid()
@@ -42,9 +42,9 @@ export const chatMessage = pgTable(
     createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
-    index('chatMessage_chatId_idx').on(table.chatId),
+    index('chat_message_chat_id_idx').on(table.chatId),
     check(
-      'chatMessage_role_check',
+      'chat_message_role_check',
       sql`${table.role} IN ('user', 'assistant')`
     ),
   ]

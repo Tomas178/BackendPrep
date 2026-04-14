@@ -1,26 +1,34 @@
 import { pgTable, text, boolean, timestamp, index } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('user', {
-  id: text().primaryKey().notNull(),
-  name: text().notNull(),
-  email: text().notNull().unique(),
-  emailVerified: boolean().notNull(),
-  image: text(),
-  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-  updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  id: text('id').primaryKey().notNull(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  emailVerified: boolean('emailVerified').notNull(),
+  image: text('image'),
+  createdAt: timestamp('createdAt', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp('updatedAt', { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
 export const session = pgTable(
   'session',
   {
-    id: text().primaryKey().notNull(),
-    expiresAt: timestamp({ withTimezone: true }).notNull(),
-    token: text().notNull().unique(),
-    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-    ipAddress: text(),
-    userAgent: text(),
-    userId: text()
+    id: text('id').primaryKey().notNull(),
+    expiresAt: timestamp('expiresAt', { withTimezone: true }).notNull(),
+    token: text('token').notNull().unique(),
+    createdAt: timestamp('createdAt', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp('updatedAt', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    ipAddress: text('ipAddress'),
+    userAgent: text('userAgent'),
+    userId: text('userId')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
   },
@@ -30,21 +38,29 @@ export const session = pgTable(
 export const account = pgTable(
   'account',
   {
-    id: text().primaryKey().notNull(),
-    accountId: text().notNull(),
-    providerId: text().notNull(),
-    userId: text()
+    id: text('id').primaryKey().notNull(),
+    accountId: text('accountId').notNull(),
+    providerId: text('providerId').notNull(),
+    userId: text('userId')
       .notNull()
       .references(() => user.id, { onDelete: 'cascade' }),
-    accessToken: text(),
-    refreshToken: text(),
-    idToken: text(),
-    accessTokenExpiresAt: timestamp({ withTimezone: true }),
-    refreshTokenExpiresAt: timestamp({ withTimezone: true }),
-    scope: text(),
-    password: text(),
-    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+    accessToken: text('accessToken'),
+    refreshToken: text('refreshToken'),
+    idToken: text('idToken'),
+    accessTokenExpiresAt: timestamp('accessTokenExpiresAt', {
+      withTimezone: true,
+    }),
+    refreshTokenExpiresAt: timestamp('refreshTokenExpiresAt', {
+      withTimezone: true,
+    }),
+    scope: text('scope'),
+    password: text('password'),
+    createdAt: timestamp('createdAt', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp('updatedAt', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (table) => [index('account_userId_idx').on(table.userId)]
 );
@@ -52,12 +68,16 @@ export const account = pgTable(
 export const verification = pgTable(
   'verification',
   {
-    id: text().primaryKey().notNull(),
-    identifier: text().notNull(),
-    value: text().notNull(),
-    expiresAt: timestamp({ withTimezone: true }).notNull(),
-    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+    id: text('id').primaryKey().notNull(),
+    identifier: text('identifier').notNull(),
+    value: text('value').notNull(),
+    expiresAt: timestamp('expiresAt', { withTimezone: true }).notNull(),
+    createdAt: timestamp('createdAt', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp('updatedAt', { withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (table) => [index('verification_identifier_idx').on(table.identifier)]
 );

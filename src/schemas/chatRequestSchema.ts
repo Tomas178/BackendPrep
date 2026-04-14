@@ -29,6 +29,7 @@ import {
 
 export const chatRequestSchema = z
   .object({
+    chatId: z.uuid().nullable(),
     messages: z.array(
       z.object({
         role: z.enum([ROLES.USER, ROLES.ASSISTANT]),

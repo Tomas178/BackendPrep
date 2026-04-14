@@ -7,22 +7,30 @@ import type { ChatMessage, ChatSettings, UsageData } from '@/types/chat';
 import MessageBox from './MessageBox';
 import { useState, useRef, useEffect, useMemo, KeyboardEvent } from 'react';
 
-const INITIAL_MESSAGES: ChatMessage[] = [
+const DEFAULT_MESSAGES: ChatMessage[] = [
   { role: ROLES.ASSISTANT, content: ASSISTANT_WELCOME_MESSAGE },
 ];
 
 type ChatProps = {
+  chatId: string | null;
   provider: AvailableLLMs;
   settings: ChatSettings;
+  initialMessages?: ChatMessage[];
   onUserMessageSent?: () => void;
+  onChatCreated?: (chatId: string) => void;
 };
 
 export default function Chat({
+  chatId,
   provider,
   settings,
+  initialMessages,
   onUserMessageSent,
+  onChatCreated,
 }: ChatProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>(INITIAL_MESSAGES);
+  const [messages, setMessages] = useState<ChatMessage[]>(
+    initialMessages?.length ? initialMessages : DEFAULT_MESSAGES
+  );
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -58,6 +66,7 @@ export default function Chat({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          chatId,
           messages: apiMessages,
           provider,
           settings,
@@ -69,8 +78,12 @@ export default function Chat({
         throw new Error(data?.error || 'Request failed');
       }
 
-      const data: { content: string; usage?: UsageData } =
+      const data: { chatId: string; content: string; usage?: UsageData } =
         await response.json();
+
+      if (!chatId) {
+        onChatCreated?.(data.chatId);
+      }
 
       setMessages((prev) => {
         const updated = [...prev];

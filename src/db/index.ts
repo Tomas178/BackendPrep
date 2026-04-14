@@ -7,4 +7,4 @@ export const pool = new Pool({
   connectionString: config.databaseUrl,
 });
 
-export const db = drizzle(pool, { schema });
+export const db = drizzle(pool, { schema, casing: 'snake_case' });
