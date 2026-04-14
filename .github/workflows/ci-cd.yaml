@@ -60,8 +60,35 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_LIGHTSAIL_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_LIGHTSAIL_SECRET_ACCESS_KEY }}
 
+      - name: Create .env.local
+        run: |
+          cat <<EOF > .env.local
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}
+          BETTER_AUTH_URL=${{ vars.BETTER_AUTH_URL }}
+          OAUTH_GOOGLE_CLIENT_ID=${{ secrets.OAUTH_GOOGLE_CLIENT_ID }}
+          OAUTH_GOOGLE_CLIENT_SECRET=${{ secrets.OAUTH_GOOGLE_CLIENT_SECRET }}
+          OAUTH_GITHUB_CLIENT_ID=${{ secrets.OAUTH_GITHUB_CLIENT_ID }}
+          OAUTH_GITHUB_CLIENT_SECRET=${{ secrets.OAUTH_GITHUB_CLIENT_SECRET }}
+          MAIL_HOST=${{ vars.MAIL_HOST }}
+          MAIL_PORT=${{ vars.MAIL_PORT }}
+          MAIL_SECURE=${{ vars.MAIL_SECURE }}
+          EMAIL=${{ vars.EMAIL }}
+          EMAIL_APP_PASS=${{ secrets.EMAIL_APP_PASS }}
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
+          EOF
+
       - name: Build image
-        run: docker build -t $IMAGE_TAG -f Dockerfile .
+        run: |
+          docker build \
+            --secret id=env_local,src=.env.local \
+            -t $IMAGE_TAG \
+            -f Dockerfile .
+
+      - name: Remove env file
+        run: rm .env.local
 
       - name: Push image to Lightsail
         run: >-
