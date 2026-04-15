@@ -63,7 +63,7 @@ export default function Chat({
 
     onUserMessageSent?.();
 
-    setMessages([...newMessages, { role: 'assistant', content: '' }]);
+    setMessages([...newMessages, { role: ROLES.ASSISTANT, content: '' }]);
     setInput('');
     setIsLoading(true);
 
@@ -86,7 +86,7 @@ export default function Chat({
       if (response.status === StatusCodes.TOO_MANY_REQUESTS) {
         const data = await response.json().catch(() => null);
         setRateLimitError(
-          data?.error || 'Too many requests. Please slow down!!!!'
+          data?.error || 'Too many requests. Please slow down.'
         );
         setMessages(messages);
         setInput(trimmed);

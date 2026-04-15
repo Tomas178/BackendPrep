@@ -11,7 +11,7 @@ export function getChatCompletion(
   return client.models.generateContent({
     model: settings.model,
     contents: messages.map((msg) => ({
-      role: msg.role === ROLES.ASSISTANT ? 'model' : 'user',
+      role: msg.role === ROLES.ASSISTANT ? 'model' : ROLES.USER,
       parts: [{ text: msg.content }],
     })),
     config: {

@@ -11,6 +11,7 @@ import { sql, desc } from 'drizzle-orm';
 import { users } from './auth';
 import { createdTimestamptz, timestampstz } from './columns.helpers';
 import { TABLES } from './tables';
+import { ROLES } from '@/constants/LLMs/roles';
 
 export const chats = pgTable(
   TABLES.CHATS,
@@ -53,7 +54,7 @@ export const chatMessages = pgTable(
     ),
     check(
       'chat_messages_role_check',
-      sql`${table.role} IN ('user', 'assistant')`
+      sql`${table.role} IN (${ROLES.USER}, ${ROLES.ASSISTANT})`
     ),
   ]
 );
