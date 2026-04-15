@@ -7,6 +7,7 @@ import { enforceByUser, rateLimitHeaders } from '@/lib/rateLimit';
 import { getResponse } from '@/lib/LLMs/getResponse';
 import { isInappropriateMessage } from '@/lib/LLMs/openai/isInappropriateMessage';
 import { createChat, addMessages, touchChat } from '@/db/queries/chat';
+import { ROLES } from '@/constants/LLMs/roles';
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,11 +17,12 @@ export async function POST(req: NextRequest) {
     }
 
     const limit = await enforceByUser(req, session.user.id);
-    if (!limit.ok) return limit.response;
+    if (!limit.ok) {
+      return limit.response;
+    }
 
     const body = await req.json();
     const result = chatRequestSchema.safeParse(body);
-    console.log(result);
 
     if (!result.success) {
       return errorResponse('Invalid request', StatusCodes.BAD_REQUEST);
@@ -58,7 +60,7 @@ export async function POST(req: NextRequest) {
       },
       {
         chatId: resolvedChatId,
-        role: 'assistant',
+        role: ROLES.ASSISTANT,
         content: response.content,
         promptTokens: response.usage?.promptTokens,
         completionTokens: response.usage?.completionTokens,
@@ -69,8 +71,6 @@ export async function POST(req: NextRequest) {
     if (chatId) {
       await touchChat(chatId);
     }
-
-    console.log(response);
 
     return NextResponse.json(
       {

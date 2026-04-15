@@ -1,6 +1,7 @@
 import { RateLimitResult } from '../types';
 
-export function rateLimitHeaders(result: RateLimitResult): HeadersInit {
+export function rateLimitHeaders(result: RateLimitResult | null): HeadersInit {
+  if (!result) return {};
   return {
     'X-RateLimit-Limit': String(result.limit),
     'X-RateLimit-Remaining': String(result.remaining),

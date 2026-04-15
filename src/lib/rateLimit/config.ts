@@ -4,7 +4,7 @@ export type RouteLimit = {
 };
 
 export const SECURITY_LIMITS: Record<string, RouteLimit> = {
-  '/api/chat': { requests: 20, window: 60 },
+  '/api/chat': { requests: 2, window: 60 },
 
   '/api/auth/sign-up/email': { requests: 3, window: 60 },
   '/api/auth/sign-in/email': { requests: 5, window: 60 },

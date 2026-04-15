@@ -13,7 +13,7 @@ export async function enforceRouteLimit({
   const path = pathname ?? req.nextUrl.pathname;
   const limit = getRouteLimit(path);
   if (!limit) {
-    throw new Error(`No rate limit config for ${path}`);
+    return { ok: true, result: null };
   }
 
   const result = await consume(`${path}:${identifier}`, limit);

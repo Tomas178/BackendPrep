@@ -64,6 +64,7 @@ jobs:
         run: |
           cat <<EOF > .env.local
           DATABASE_URL=${{ secrets.DATABASE_URL }}
+          REDIS_URL=${{ vars.REDIS_URL }}
           BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}
           BETTER_AUTH_URL=${{ vars.BETTER_AUTH_URL }}
           OAUTH_GOOGLE_CLIENT_ID=${{ secrets.OAUTH_GOOGLE_CLIENT_ID }}
@@ -118,6 +119,7 @@ jobs:
                 "ANTHROPIC_API_KEY": "${{ secrets.ANTHROPIC_API_KEY }}",
                 "GOOGLE_API_KEY": "${{ secrets.GOOGLE_API_KEY }}",
                 "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
+                "REDIS_URL": "${{ vars.REDIS_URL }}",
                 "BETTER_AUTH_SECRET": "${{ secrets.BETTER_AUTH_SECRET }}",
                 "BETTER_AUTH_URL": "${{ vars.BETTER_AUTH_URL }}",
                 "OAUTH_GOOGLE_CLIENT_ID": "${{ secrets.OAUTH_GOOGLE_CLIENT_ID }}",
@@ -129,6 +131,12 @@ jobs:
                 "MAIL_SECURE": "${{ vars.MAIL_SECURE }}",
                 "EMAIL": "${{ vars.EMAIL }}",
                 "EMAIL_APP_PASS": "${{ secrets.EMAIL_APP_PASS }}"
+              }
+            },
+            "redis": {
+              "image": "redis:7-alpine",
+              "ports": {
+                "6379": "TCP"
               }
             }
           }' > containers.json

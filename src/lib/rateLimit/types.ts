@@ -15,7 +15,7 @@ export type EnforceArgs = {
 
 export type EnforceResultSuccess = {
   ok: true;
-  result: RateLimitResult;
+  result: RateLimitResult | null;
 };
 
 export type EnforceResultFailure = {
