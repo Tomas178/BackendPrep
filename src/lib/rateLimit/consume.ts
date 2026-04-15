@@ -14,13 +14,6 @@ export async function consume(
     .ttl(redisKey)
     .exec())!;
 
-  console.log({
-    redis: {
-      countEntry,
-      ttlEntry,
-    },
-  });
-
   const count = Number(countEntry[1]);
   const ttl = Number(ttlEntry[1]);
 

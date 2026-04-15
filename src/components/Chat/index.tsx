@@ -5,7 +5,9 @@ import { ASSISTANT_WELCOME_MESSAGE } from '@/constants/LLMs/prompts';
 import type { AvailableLLMs } from '@/constants/LLMs/availableLLMs';
 import type { ChatMessage, ChatSettings, UsageData } from '@/types/chat';
 import MessageBox from './MessageBox';
+import ErrorToast from '@/components/ErrorToast';
 import { useState, useRef, useEffect, useMemo, KeyboardEvent } from 'react';
+import { StatusCodes } from 'http-status-codes';
 
 const DEFAULT_MESSAGES: ChatMessage[] = [
   { role: ROLES.ASSISTANT, content: ASSISTANT_WELCOME_MESSAGE },
@@ -34,7 +36,14 @@ export default function Chat({
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [rateLimitError, setRateLimitError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!rateLimitError) return;
+    const timer = setTimeout(() => setRateLimitError(null), 5000);
+    return () => clearTimeout(timer);
+  }, [rateLimitError]);
 
   const totalCost = useMemo(
     () => messages.reduce((sum, msg) => sum + (msg.usage?.cost ?? 0), 0),
@@ -73,6 +82,16 @@ export default function Chat({
           settings,
         }),
       });
+
+      if (response.status === StatusCodes.TOO_MANY_REQUESTS) {
+        const data = await response.json().catch(() => null);
+        setRateLimitError(
+          data?.error || 'Too many requests. Please slow down!!!!'
+        );
+        setMessages(messages);
+        setInput(trimmed);
+        return;
+      }
 
       if (!response.ok) {
         const data = await response.json().catch(() => null);
@@ -123,6 +142,13 @@ export default function Chat({
 
   return (
     <div className="flex flex-1 flex-col">
+      {rateLimitError && (
+        <ErrorToast
+          message={rateLimitError}
+          onDismiss={() => setRateLimitError(null)}
+        />
+      )}
+
       <div className="flex-1 overflow-y-auto px-4">
         <div className="mx-auto max-w-3xl space-y-4 py-6">
           {messages.map((msg, i) => (
