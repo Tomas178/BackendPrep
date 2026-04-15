@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { chatRequestSchema } from '@/schemas/chatRequestSchema';
 import { errorResponse } from '@/lib/api/errorResponse';
 import { getSession } from '@/lib/api/getSession';
+import { enforceByUser, rateLimitHeaders } from '@/lib/rateLimit';
 import { getResponse } from '@/lib/LLMs/getResponse';
 import { isInappropriateMessage } from '@/lib/LLMs/openai/isInappropriateMessage';
 import { createChat, addMessages, touchChat } from '@/db/queries/chat';
@@ -13,6 +14,9 @@ export async function POST(req: NextRequest) {
     if (!session) {
       return errorResponse('Unauthorized', StatusCodes.UNAUTHORIZED);
     }
+
+    const limit = await enforceByUser(req, session.user.id);
+    if (!limit.ok) return limit.response;
 
     const body = await req.json();
     const result = chatRequestSchema.safeParse(body);
@@ -68,11 +72,14 @@ export async function POST(req: NextRequest) {
 
     console.log(response);
 
-    return NextResponse.json({
-      chatId: resolvedChatId,
-      content: response.content,
-      usage: response.usage,
-    });
+    return NextResponse.json(
+      {
+        chatId: resolvedChatId,
+        content: response.content,
+        usage: response.usage,
+      },
+      { headers: rateLimitHeaders(limit.result) }
+    );
   } catch (error) {
     console.error('Chat API error:', error);
     return errorResponse(

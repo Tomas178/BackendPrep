@@ -5,6 +5,7 @@ const schema = z
     env: z.enum(['development', 'production', 'test']).default('development'),
     port: z.coerce.number().default(3000),
     databaseUrl: z.string().min(1, 'DATABASE_URL is required'),
+    redisUrl: z.string().min(1, 'REDIS_URL is required'),
     betterAuth: z.object({
       secret: z
         .string()
@@ -54,6 +55,7 @@ const config = schema.parse({
   env: process.env.NODE_ENV,
   port: process.env.PORT,
   databaseUrl: process.env.DATABASE_URL,
+  redisUrl: process.env.REDIS_URL,
   betterAuth: {
     secret: process.env.BETTER_AUTH_SECRET,
     url: process.env.BETTER_AUTH_URL,
