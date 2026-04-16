@@ -3,9 +3,10 @@
 import { ROLES } from '@/constants/LLMs/roles';
 import { ASSISTANT_WELCOME_MESSAGE } from '@/constants/LLMs/prompts';
 import type { AvailableLLMs } from '@/constants/LLMs/availableLLMs';
-import type { ChatMessage, ChatSettings } from '@/types/chat';
+import type { ChatMessage, ChatSettings, ChatStreamEvent } from '@/types/chat';
 import MessageBox from './MessageBox';
 import ErrorToast from '@/components/ErrorToast';
+import { parseSSEStream } from '@/lib/sse';
 import { useState, useRef, useEffect, useMemo, KeyboardEvent } from 'react';
 import { StatusCodes } from 'http-status-codes';
 
@@ -54,6 +55,14 @@ export default function Chat({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  function updateLastMessage(updater: (msg: ChatMessage) => ChatMessage) {
+    setMessages((prev) => {
+      const updated = [...prev];
+      updated[updated.length - 1] = updater(updated[updated.length - 1]);
+      return updated;
+    });
+  }
+
   async function sendMessage() {
     const trimmed = input.trim();
     if (!trimmed || isLoading) return;
@@ -98,48 +107,19 @@ export default function Chat({
         throw new Error(data?.error || 'Request failed');
       }
 
-      const reader = response.body!.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const parts = buffer.split('\n\n');
-        buffer = parts.pop()!;
-
-        for (const part of parts) {
-          if (!part.startsWith('data: ')) continue;
-          const data = JSON.parse(part.slice(6));
-
-          if (data.type === 'delta') {
-            setMessages((prev) => {
-              const updated = [...prev];
-              updated[updated.length - 1] = {
-                ...updated[updated.length - 1],
-                content: updated[updated.length - 1].content + data.content,
-              };
-              return updated;
-            });
-          } else if (data.type === 'done') {
-            if (!chatId) {
-              onChatCreated?.(data.chatId);
-            }
-            if (data.usage) {
-              setMessages((prev) => {
-                const updated = [...prev];
-                updated[updated.length - 1] = {
-                  ...updated[updated.length - 1],
-                  usage: data.usage,
-                };
-                return updated;
-              });
-            }
-          } else if (data.type === 'error') {
-            throw new Error(data.message);
+      for await (const event of parseSSEStream<ChatStreamEvent>(response)) {
+        if (event.type === 'delta') {
+          updateLastMessage((msg) => ({
+            ...msg,
+            content: msg.content + event.content,
+          }));
+        } else if (event.type === 'done') {
+          if (!chatId) onChatCreated?.(event.chatId);
+          if (event.usage) {
+            updateLastMessage((msg) => ({ ...msg, usage: event.usage }));
           }
+        } else if (event.type === 'error') {
+          throw new Error(event.message);
         }
       }
     } catch (error) {
@@ -148,14 +128,10 @@ export default function Chat({
           ? error.message
           : 'Something went wrong. Please try again.';
 
-      setMessages((prev) => {
-        const updated = [...prev];
-        updated[updated.length - 1] = {
-          role: ROLES.ASSISTANT,
-          content: errorMessage,
-        };
-        return updated;
-      });
+      updateLastMessage(() => ({
+        role: ROLES.ASSISTANT,
+        content: errorMessage,
+      }));
     } finally {
       setIsLoading(false);
     }

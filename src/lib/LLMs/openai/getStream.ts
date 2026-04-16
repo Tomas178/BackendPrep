@@ -3,7 +3,7 @@ import { ROLES } from '@/constants/LLMs/roles';
 import type { ChatMessage, ChatSettings } from '@/types/chat';
 import type OpenAI from 'openai';
 
-export function getChatCompletion(
+export function getStream(
   client: OpenAI,
   messages: ChatMessage[],
   settings: ChatSettings
@@ -19,5 +19,7 @@ export function getChatCompletion(
     max_completion_tokens: settings.maxOutputTokens,
     frequency_penalty: settings.frequencyPenalty,
     presence_penalty: settings.presencePenalty,
+    stream: true,
+    stream_options: { include_usage: true },
   });
 }

@@ -3,12 +3,12 @@ import { toGoogleRole } from '@/constants/LLMs/google/roles';
 import type { ChatMessage, ChatSettings } from '@/types/chat';
 import type { GoogleGenAI } from '@google/genai';
 
-export function getChatCompletion(
+export function getStream(
   client: GoogleGenAI,
   messages: ChatMessage[],
   settings: ChatSettings
 ) {
-  return client.models.generateContent({
+  return client.models.generateContentStream({
     model: settings.model,
     contents: messages.map((msg) => ({
       role: toGoogleRole[msg.role],

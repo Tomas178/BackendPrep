@@ -1,15 +1,13 @@
 import { INTERVIEW_SYSTEM_PROMPT } from '@/constants/LLMs/prompts';
 import type { ChatMessage, ChatSettings } from '@/types/chat';
 import type Anthropic from '@anthropic-ai/sdk';
-import type { APIPromise } from '@anthropic-ai/sdk';
-import type { Message } from '@anthropic-ai/sdk/resources';
 
-export function getChatCompletion(
+export function getStream(
   client: Anthropic,
   messages: ChatMessage[],
   settings: ChatSettings
-): APIPromise<Message> {
-  return client.messages.create({
+) {
+  return client.messages.stream({
     model: settings.model,
     system: INTERVIEW_SYSTEM_PROMPT,
     messages: messages.map((msg) => ({

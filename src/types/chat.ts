@@ -22,7 +22,11 @@ export type ChatMessage = {
   usage?: UsageData;
 };
 
-export type ChatResponse = {
-  content: string;
-  usage?: UsageData;
-};
+export type StreamChunk =
+  | { type: 'delta'; content: string }
+  | { type: 'done'; usage?: UsageData };
+
+export type ChatStreamEvent =
+  | { type: 'delta'; content: string }
+  | { type: 'done'; chatId: string; usage?: UsageData }
+  | { type: 'error'; message: string };

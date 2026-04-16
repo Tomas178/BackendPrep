@@ -8,7 +8,10 @@ const handlers = toNextJsHandler(auth);
 export const GET = handlers.GET;
 
 export async function POST(req: NextRequest) {
-  const limit = await enforceByIp(req);
-  if (!limit.ok) return limit.response;
+  const rateLimit = await enforceByIp(req);
+  if (!rateLimit.ok) {
+    return rateLimit.response;
+  }
+
   return handlers.POST(req);
 }

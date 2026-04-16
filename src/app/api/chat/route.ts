@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { StatusCodes } from 'http-status-codes';
 import { chatRequestSchema } from '@/schemas/chatRequestSchema';
 import { errorResponse } from '@/lib/api/errorResponse';
 import { getSession } from '@/lib/api/getSession';
 import { enforceByUser, rateLimitHeaders } from '@/lib/rateLimit';
-import { getResponse } from '@/lib/LLMs/getResponse';
+import { streamResponse } from '@/lib/LLMs/streamResponse';
 import { isInappropriateMessage } from '@/lib/LLMs/openai/isInappropriateMessage';
 import { createChat, addMessages, touchChat } from '@/db/queries/chat';
 import { ROLES } from '@/constants/LLMs/roles';
@@ -16,9 +16,9 @@ export async function POST(req: NextRequest) {
       return errorResponse('Unauthorized', StatusCodes.UNAUTHORIZED);
     }
 
-    const limit = await enforceByUser(req, session.user.id);
-    if (!limit.ok) {
-      return limit.response;
+    const rateLimit = await enforceByUser(req, session.user.id);
+    if (!rateLimit.ok) {
+      return rateLimit.response;
     }
 
     const body = await req.json();
@@ -39,47 +39,86 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const response = await getResponse(provider, messages, settings);
+    const encoder = new TextEncoder();
+    const encodeSSE = (data: unknown) =>
+      encoder.encode(`data: ${JSON.stringify(data)}\n\n`);
 
-    const resolvedChatId =
-      chatId ??
-      (
-        await createChat({
-          userId: session.user.id,
-          title: lastMessage.content,
-          provider,
-          model: settings.model,
-        })
-      ).id;
+    const stream = new ReadableStream({
+      async start(controller) {
+        let fullContent = '';
 
-    await addMessages([
-      {
-        chatId: resolvedChatId,
-        role: lastMessage.role,
-        content: lastMessage.content,
+        try {
+          for await (const chunk of streamResponse(
+            provider,
+            messages,
+            settings
+          )) {
+            if (chunk.type === 'delta') {
+              fullContent += chunk.content;
+              controller.enqueue(encodeSSE(chunk));
+            } else {
+              const resolvedChatId =
+                chatId ??
+                (
+                  await createChat({
+                    userId: session.user.id,
+                    title: lastMessage.content,
+                    provider,
+                    model: settings.model,
+                  })
+                ).id;
+
+              await addMessages([
+                {
+                  chatId: resolvedChatId,
+                  role: lastMessage.role,
+                  content: lastMessage.content,
+                },
+                {
+                  chatId: resolvedChatId,
+                  role: ROLES.ASSISTANT,
+                  content: fullContent,
+                  promptTokens: chunk.usage?.promptTokens,
+                  completionTokens: chunk.usage?.completionTokens,
+                  cost: chunk.usage?.cost.toString(),
+                },
+              ]);
+
+              if (chatId) {
+                await touchChat(chatId);
+              }
+
+              controller.enqueue(
+                encodeSSE({
+                  type: 'done',
+                  chatId: resolvedChatId,
+                  usage: chunk.usage,
+                })
+              );
+            }
+          }
+        } catch (error) {
+          console.error('Stream error:', error);
+          controller.enqueue(
+            encodeSSE({
+              type: 'error',
+              message: 'Failed to process request',
+            })
+          );
+        } finally {
+          controller.close();
+        }
       },
-      {
-        chatId: resolvedChatId,
-        role: ROLES.ASSISTANT,
-        content: response.content,
-        promptTokens: response.usage?.promptTokens,
-        completionTokens: response.usage?.completionTokens,
-        cost: response.usage?.cost.toString(),
-      },
-    ]);
+    });
 
-    if (chatId) {
-      await touchChat(chatId);
-    }
-
-    return NextResponse.json(
-      {
-        chatId: resolvedChatId,
-        content: response.content,
-        usage: response.usage,
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive',
+        ...rateLimitHeaders(rateLimit.result),
       },
-      { headers: rateLimitHeaders(limit.result) }
-    );
+    });
   } catch (error) {
     console.error('Chat API error:', error);
     return errorResponse(
