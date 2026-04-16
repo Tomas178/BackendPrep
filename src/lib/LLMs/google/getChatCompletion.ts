@@ -1,5 +1,5 @@
 import { INTERVIEW_SYSTEM_PROMPT } from '@/constants/LLMs/prompts';
-import { ROLES } from '@/constants/LLMs/roles';
+import { toGoogleRole } from '@/constants/LLMs/google/roles';
 import type { ChatMessage, ChatSettings } from '@/types/chat';
 import type { GoogleGenAI } from '@google/genai';
 
@@ -11,7 +11,7 @@ export function getChatCompletion(
   return client.models.generateContent({
     model: settings.model,
     contents: messages.map((msg) => ({
-      role: msg.role === ROLES.ASSISTANT ? 'model' : ROLES.USER,
+      role: toGoogleRole[msg.role],
       parts: [{ text: msg.content }],
     })),
     config: {
