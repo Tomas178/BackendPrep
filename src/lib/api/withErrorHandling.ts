@@ -17,7 +17,7 @@ export function withErrorHandling<TContext>(
       return await handler(req, context);
     } catch (error) {
       if (error instanceof ApiError) {
-        return errorResponse(error.message, error.status);
+        return errorResponse(error.message, error.status, error.headers);
       }
 
       logger.error('Unexpected API error:', error);

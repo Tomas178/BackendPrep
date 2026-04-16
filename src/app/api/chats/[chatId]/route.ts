@@ -1,56 +1,34 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { StatusCodes } from 'http-status-codes';
-import { errorResponse } from '@/lib/api/errorResponse';
-import { getSession } from '@/lib/api/getSession';
-import logger from '@/lib/logger';
 import { deleteUserChat, getChatWithMessages } from '@/lib/db/queries/chat';
+import { withAuth } from '@/lib/api/withAuth';
+import { withErrorHandling } from '@/lib/api/withErrorHandling';
+import ChatNotFoundError from '@/lib/errors/chat/ChatNotFoundError';
 
-type Params = { params: Promise<{ chatId: string }> };
+type RouteContext = { params: Promise<{ chatId: string }> };
 
-export async function GET(_req: NextRequest, { params }: Params) {
-  try {
-    const session = await getSession();
-    if (!session) {
-      return errorResponse('Unauthorized', StatusCodes.UNAUTHORIZED);
-    }
-
+export const GET = withErrorHandling(
+  withAuth<RouteContext>(async (session, _req, { params }) => {
     const { chatId } = await params;
-    const chat = await getChatWithMessages(chatId, session.user.id);
 
+    const chat = await getChatWithMessages(chatId, session.user.id);
     if (!chat) {
-      return errorResponse('Chat not found', StatusCodes.NOT_FOUND);
+      throw new ChatNotFoundError();
     }
 
     return NextResponse.json(chat);
-  } catch (error) {
-    logger.error('Get chat error:', error);
-    return errorResponse(
-      'Failed to fetch chat',
-      StatusCodes.INTERNAL_SERVER_ERROR
-    );
-  }
-}
+  })
+);
 
-export async function DELETE(_req: NextRequest, { params }: Params) {
-  try {
-    const session = await getSession();
-    if (!session) {
-      return errorResponse('Unauthorized', StatusCodes.UNAUTHORIZED);
-    }
-
+export const DELETE = withErrorHandling(
+  withAuth<RouteContext>(async (session, _req, { params }) => {
     const { chatId } = await params;
-    const deleted = await deleteUserChat(chatId, session.user.id);
 
+    const deleted = await deleteUserChat(chatId, session.user.id);
     if (!deleted) {
-      return errorResponse('Chat not found', StatusCodes.NOT_FOUND);
+      throw new ChatNotFoundError();
     }
 
     return new NextResponse(null, { status: StatusCodes.NO_CONTENT });
-  } catch (error) {
-    logger.error('Delete chat error:', error);
-    return errorResponse(
-      'Failed to delete chat',
-      StatusCodes.INTERNAL_SERVER_ERROR
-    );
-  }
-}
+  })
+);

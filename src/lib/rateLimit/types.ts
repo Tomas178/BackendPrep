@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 
 export type RateLimitResult = {
   allowed: boolean;
@@ -20,7 +20,7 @@ export type EnforceResultSuccess = {
 
 export type EnforceResultFailure = {
   ok: false;
-  response: NextResponse;
+  result: RateLimitResult;
 };
 
 export type EnforceResult = EnforceResultSuccess | EnforceResultFailure;

@@ -1,8 +1,5 @@
-import { NextResponse } from 'next/server';
-import { StatusCodes } from 'http-status-codes';
 import { getRouteLimit } from './config';
 import { consume } from './consume';
-import { rateLimitHeaders } from './utils/rateLimitHeaders';
 import type { EnforceArgs, EnforceResult } from './types';
 
 export async function enforceRouteLimit({
@@ -19,16 +16,7 @@ export async function enforceRouteLimit({
   const result = await consume(`${path}:${identifier}`, routeLimit);
 
   if (!result.allowed) {
-    return {
-      ok: false,
-      response: NextResponse.json(
-        { error: 'Too many requests. Please slow down.' },
-        {
-          status: StatusCodes.TOO_MANY_REQUESTS,
-          headers: rateLimitHeaders(result),
-        }
-      ),
-    };
+    return { ok: false, result };
   }
 
   return { ok: true, result };

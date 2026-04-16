@@ -1,7 +1,6 @@
 import { NextRequest } from 'next/server';
-import { StatusCodes } from 'http-status-codes';
-import { errorResponse } from '@/lib/api/errorResponse';
 import { getSession } from '@/lib/api/getSession';
+import UnauthorizedError from '@/lib/errors/UnauthorizedError';
 
 type RouteHandler<TContext = unknown> = (
   req: NextRequest,
@@ -21,7 +20,7 @@ export function withAuth<TContext>(
     const session = await getSession();
 
     if (!session) {
-      return errorResponse('Unauthorized', StatusCodes.UNAUTHORIZED);
+      throw new UnauthorizedError();
     }
 
     return handler(session, req, context);
