@@ -1,8 +1,7 @@
 export async function register() {
-  if (
-    process.env.NEXT_RUNTIME === 'nodejs' &&
-    process.env.NODE_ENV === 'production'
-  ) {
+  if (process.env.NEXT_RUNTIME !== 'nodejs') return;
+
+  if (process.env.NODE_ENV === 'production') {
     const { drizzle } = await import('drizzle-orm/node-postgres');
     const { migrate } = await import('drizzle-orm/node-postgres/migrator');
 
@@ -12,4 +11,10 @@ export async function register() {
     const { default: logger } = await import('@/lib/logger');
     logger.info('Database migrations applied');
   }
+
+  await import('@/lib/db');
+  await import('@/lib/redis');
+
+  const { setupGracefulShutdown } = await import('@/lib/gracefulShutdown');
+  setupGracefulShutdown();
 }

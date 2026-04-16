@@ -2,6 +2,8 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
 import config from '@/lib/config';
 import logger from '@/lib/logger';
+import { gracefulShutdownManager } from '@/lib/gracefulShutdown/GracefulShutdownManager';
+import { GracefulShutdownPriority } from '@/constants/gracefulShutdownPriority';
 import * as schema from './schema';
 
 export const pool = new Pool({
@@ -12,3 +14,9 @@ pool.on('connect', () => logger.info('PostgreSQL pool: client connected'));
 pool.on('error', (err) => logger.error('PostgreSQL pool error:', err));
 
 export const db = drizzle(pool, { schema, casing: 'snake_case' });
+
+gracefulShutdownManager.registerCleanup(
+  'postgres-pool',
+  () => pool.end(),
+  GracefulShutdownPriority.HIGH
+);
