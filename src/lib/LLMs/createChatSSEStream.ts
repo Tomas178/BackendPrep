@@ -1,7 +1,8 @@
 import { streamResponse } from '@/lib/LLMs/streamResponse';
-import { createChat, addMessages, touchChat } from '@/db/queries/chat';
+import { createChat, addMessages, touchChat } from '@/lib/db/queries/chat';
 import { ROLES } from '@/constants/LLMs/roles';
 import { encodeSSE } from '@/lib/sse';
+import logger from '@/lib/logger';
 import type { AvailableLLMs } from '@/constants/LLMs/availableLLMs';
 import type { ChatMessage, ChatSettings } from '@/types/chat';
 
@@ -73,7 +74,7 @@ export function createChatSSEStream({
           }
         }
       } catch (error) {
-        console.error('Stream error:', error);
+        logger.error('Stream error:', error);
         controller.enqueue(
           encodeSSE({ type: 'error', message: 'Failed to process request' })
         );

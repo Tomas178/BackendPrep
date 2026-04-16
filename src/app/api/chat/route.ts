@@ -7,6 +7,7 @@ import { isInappropriateMessage } from '@/lib/LLMs/openai/isInappropriateMessage
 import { createChatSSEStream } from '@/lib/LLMs/createChatSSEStream';
 import { enforceByUser } from '@/lib/rateLimit/utils/enforcements/custom/enforceByUser';
 import { rateLimitHeaders } from '@/lib/rateLimit/utils/rateLimitHeaders';
+import logger from '@/lib/logger';
 
 export async function POST(req: NextRequest) {
   try {
@@ -52,7 +53,7 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Chat API error:', error);
+    logger.error('Chat API error:', error);
     return errorResponse(
       'Failed to process request',
       StatusCodes.INTERNAL_SERVER_ERROR
