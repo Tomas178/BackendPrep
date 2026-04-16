@@ -13,6 +13,8 @@ export type ChatSummary = {
 type ChatHistoryProps = {
   chats: ChatSummary[];
   activeChatId: string | null;
+  isLoading: boolean;
+  loadingChatId: string | null;
   onSelectChat: (id: string) => void;
   onNewChat: () => void;
   onDeleteChat: (id: string) => void;
@@ -21,6 +23,8 @@ type ChatHistoryProps = {
 export default function ChatHistory({
   chats,
   activeChatId,
+  isLoading,
+  loadingChatId,
   onSelectChat,
   onNewChat,
   onDeleteChat,
@@ -38,23 +42,32 @@ export default function ChatHistory({
         </button>
       </div>
       <div className="flex-1 space-y-1 overflow-y-auto p-2">
-        {chats.length === 0 && (
+        {isLoading ? (
+          Array.from({ length: 3 }, (_, i) => (
+            <div key={i} className="animate-pulse rounded-lg px-3 py-2">
+              <div className="bg-muted/20 h-4 w-3/4 rounded" />
+              <div className="bg-muted/20 mt-1.5 h-3 w-1/2 rounded" />
+            </div>
+          ))
+        ) : chats.length === 0 ? (
           <p className="text-muted px-3 py-4 text-center text-xs">
             No conversations yet
           </p>
+        ) : (
+          chats.map((chat) => (
+            <ChatItem
+              key={chat.id}
+              id={chat.id}
+              title={chat.title}
+              model={chat.model}
+              updatedAt={chat.updatedAt}
+              isActive={chat.id === activeChatId}
+              isLoading={chat.id === loadingChatId}
+              onSelect={onSelectChat}
+              onDelete={onDeleteChat}
+            />
+          ))
         )}
-        {chats.map((chat) => (
-          <ChatItem
-            key={chat.id}
-            id={chat.id}
-            title={chat.title}
-            model={chat.model}
-            updatedAt={chat.updatedAt}
-            isActive={chat.id === activeChatId}
-            onSelect={onSelectChat}
-            onDelete={onDeleteChat}
-          />
-        ))}
       </div>
     </aside>
   );

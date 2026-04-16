@@ -3,7 +3,7 @@
 import { ROLES } from '@/constants/LLMs/roles';
 import { ASSISTANT_WELCOME_MESSAGE } from '@/constants/LLMs/prompts';
 import type { AvailableLLMs } from '@/constants/LLMs/availableLLMs';
-import type { ChatMessage, ChatSettings, UsageData } from '@/types/chat';
+import type { ChatMessage, ChatSettings } from '@/types/chat';
 import MessageBox from './MessageBox';
 import ErrorToast from '@/components/ErrorToast';
 import { useState, useRef, useEffect, useMemo, KeyboardEvent } from 'react';
@@ -98,22 +98,50 @@ export default function Chat({
         throw new Error(data?.error || 'Request failed');
       }
 
-      const data: { chatId: string; content: string; usage?: UsageData } =
-        await response.json();
+      const reader = response.body!.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
 
-      if (!chatId) {
-        onChatCreated?.(data.chatId);
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const parts = buffer.split('\n\n');
+        buffer = parts.pop()!;
+
+        for (const part of parts) {
+          if (!part.startsWith('data: ')) continue;
+          const data = JSON.parse(part.slice(6));
+
+          if (data.type === 'delta') {
+            setMessages((prev) => {
+              const updated = [...prev];
+              updated[updated.length - 1] = {
+                ...updated[updated.length - 1],
+                content: updated[updated.length - 1].content + data.content,
+              };
+              return updated;
+            });
+          } else if (data.type === 'done') {
+            if (!chatId) {
+              onChatCreated?.(data.chatId);
+            }
+            if (data.usage) {
+              setMessages((prev) => {
+                const updated = [...prev];
+                updated[updated.length - 1] = {
+                  ...updated[updated.length - 1],
+                  usage: data.usage,
+                };
+                return updated;
+              });
+            }
+          } else if (data.type === 'error') {
+            throw new Error(data.message);
+          }
+        }
       }
-
-      setMessages((prev) => {
-        const updated = [...prev];
-        updated[updated.length - 1] = {
-          ...updated[updated.length - 1],
-          content: data.content,
-          usage: data.usage,
-        };
-        return updated;
-      });
     } catch (error) {
       const errorMessage =
         error instanceof Error && error.message !== 'Request failed'

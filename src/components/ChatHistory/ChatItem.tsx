@@ -1,4 +1,4 @@
-import { Trash2 } from 'lucide-react';
+import { Loader2, Trash2 } from 'lucide-react';
 
 type ChatItemProps = {
   id: string;
@@ -6,6 +6,7 @@ type ChatItemProps = {
   model: string;
   updatedAt: string;
   isActive: boolean;
+  isLoading: boolean;
   onSelect: (id: string) => void;
   onDelete: (id: string) => void;
 };
@@ -28,6 +29,7 @@ export default function ChatItem({
   model,
   updatedAt,
   isActive,
+  isLoading,
   onSelect,
   onDelete,
 }: ChatItemProps) {
@@ -50,15 +52,22 @@ export default function ChatItem({
         </p>
       </div>
 
-      <Trash2
-        size={14}
-        className="text-muted hover:text-primary mt-0.5 shrink-0 cursor-pointer opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-500"
-        aria-label="Delete chat"
-        onClick={(e) => {
-          e.stopPropagation();
-          onDelete(id);
-        }}
-      />
+      {isLoading ? (
+        <Loader2
+          size={14}
+          className="text-muted mt-0.5 shrink-0 animate-spin"
+        />
+      ) : (
+        <Trash2
+          size={14}
+          className="text-muted hover:text-primary mt-0.5 shrink-0 cursor-pointer opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-500"
+          aria-label="Delete chat"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(id);
+          }}
+        />
+      )}
     </button>
   );
 }

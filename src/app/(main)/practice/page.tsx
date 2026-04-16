@@ -52,6 +52,8 @@ export default function Practice() {
   const [chatId, setChatId] = useState<string | null>(null);
   const [initialMessages, setInitialMessages] = useState<ChatMessage[]>([]);
   const [chats, setChats] = useState<ChatSummary[]>([]);
+  const [isChatsLoading, setIsChatsLoading] = useState(true);
+  const [loadingChatId, setLoadingChatId] = useState<string | null>(null);
   const [hasUserMessages, setHasUserMessages] = useState(false);
   const [chatResetKey, setChatResetKey] = useState(0);
   const [pendingProvider, setPendingProvider] = useState<AvailableLLMs | null>(
@@ -60,11 +62,14 @@ export default function Practice() {
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   async function fetchChats() {
+    setIsChatsLoading(true);
     try {
       const res = await fetch('/api/chats');
       if (res.ok) setChats(await res.json());
     } catch {
       /* sidebar fetch is non-critical */
+    } finally {
+      setIsChatsLoading(false);
     }
   }
 
@@ -73,6 +78,7 @@ export default function Practice() {
   }, []);
 
   async function loadChat(id: string) {
+    setLoadingChatId(id);
     try {
       const res = await fetch(`/api/chats/${id}`);
       if (!res.ok) return;
@@ -107,6 +113,8 @@ export default function Practice() {
       setChatResetKey((prev) => prev + 1);
     } catch {
       /* load error is non-critical */
+    } finally {
+      setLoadingChatId(null);
     }
   }
 
@@ -162,10 +170,12 @@ export default function Practice() {
   }, []);
 
   return (
-    <div className="flex flex-1 font-sans">
+    <div className="flex min-h-0 flex-1 font-sans">
       <ChatHistory
         chats={chats}
         activeChatId={chatId}
+        isLoading={isChatsLoading}
+        loadingChatId={loadingChatId}
         onSelectChat={loadChat}
         onNewChat={startNewChat}
         onDeleteChat={(id) => setPendingDeleteId(id)}
