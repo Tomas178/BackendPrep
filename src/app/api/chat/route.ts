@@ -3,11 +3,12 @@ import { StatusCodes } from 'http-status-codes';
 import { chatRequestSchema } from '@/schemas/chatRequestSchema';
 import { errorResponse } from '@/lib/api/errorResponse';
 import { getSession } from '@/lib/api/getSession';
-import { enforceByUser, rateLimitHeaders } from '@/lib/rateLimit';
 import { streamResponse } from '@/lib/LLMs/streamResponse';
 import { isInappropriateMessage } from '@/lib/LLMs/openai/isInappropriateMessage';
 import { createChat, addMessages, touchChat } from '@/db/queries/chat';
 import { ROLES } from '@/constants/LLMs/roles';
+import { enforceByUser } from '@/lib/rateLimit/utils/enforcements/custom/enforceByUser';
+import { rateLimitHeaders } from '@/lib/rateLimit/utils/rateLimitHeaders';
 
 export async function POST(req: NextRequest) {
   try {

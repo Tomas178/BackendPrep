@@ -1,5 +1,5 @@
 import type { NextRequest } from 'next/server';
-import { enforceRouteLimit } from '../../enforceRouteLimit';
+import { enforceRouteLimit } from '../..';
 import type { EnforceResult } from '../../types';
 
 type IdentifierResolver<TArgs extends unknown[]> = (

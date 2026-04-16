@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { auth } from '@/lib/auth';
 import { toNextJsHandler } from 'better-auth/next-js';
-import { enforceByIp } from '@/lib/rateLimit';
+import { enforceByIp } from '@/lib/rateLimit/utils/enforcements/custom/enforceByIp';
 
 const handlers = toNextJsHandler(auth);
 
