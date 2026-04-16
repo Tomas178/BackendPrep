@@ -1,11 +1,13 @@
 import { gracefulShutdownManager } from './GracefulShutdownManager';
 import logger from '../logger';
 
-let installed = false;
+const globalForShutdown = globalThis as unknown as {
+  shutdownInstalled?: boolean;
+};
 
 export function setupGracefulShutdown() {
-  if (installed) return;
-  installed = true;
+  if (globalForShutdown.shutdownInstalled) return;
+  globalForShutdown.shutdownInstalled = true;
 
   const signals: NodeJS.Signals[] = ['SIGINT', 'SIGTERM'];
   for (const signal of signals) {

@@ -6,17 +6,25 @@ import { gracefulShutdownManager } from '@/lib/gracefulShutdown/GracefulShutdown
 import { GracefulShutdownPriority } from '@/constants/gracefulShutdownPriority';
 import * as schema from './schema';
 
-export const pool = new Pool({
-  connectionString: config.databaseUrl,
-});
+const globalForDb = globalThis as unknown as { pool?: Pool };
 
-pool.on('connect', () => logger.info('PostgreSQL pool: client connected'));
-pool.on('error', (err) => logger.error('PostgreSQL pool error:', err));
+export const pool =
+  globalForDb.pool ??
+  new Pool({
+    connectionString: config.databaseUrl,
+  });
+
+if (!globalForDb.pool) {
+  pool.on('connect', () => logger.info('PostgreSQL pool: client connected'));
+  pool.on('error', (err) => logger.error('PostgreSQL pool error:', err));
+
+  gracefulShutdownManager.registerCleanup(
+    'postgres-pool',
+    () => pool.end(),
+    GracefulShutdownPriority.HIGH
+  );
+
+  globalForDb.pool = pool;
+}
 
 export const db = drizzle(pool, { schema, casing: 'snake_case' });
-
-gracefulShutdownManager.registerCleanup(
-  'postgres-pool',
-  () => pool.end(),
-  GracefulShutdownPriority.HIGH
-);

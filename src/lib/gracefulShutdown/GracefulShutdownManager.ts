@@ -89,4 +89,13 @@ export class GracefulShutdownManager {
   }
 }
 
-export const gracefulShutdownManager = new GracefulShutdownManager();
+const globalForShutdown = globalThis as unknown as {
+  gracefulShutdownManager?: GracefulShutdownManager;
+};
+
+export const gracefulShutdownManager =
+  globalForShutdown.gracefulShutdownManager ?? new GracefulShutdownManager();
+
+if (!globalForShutdown.gracefulShutdownManager) {
+  globalForShutdown.gracefulShutdownManager = gracefulShutdownManager;
+}
