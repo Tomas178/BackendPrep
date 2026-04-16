@@ -1,3 +1,9 @@
+const encoder = new TextEncoder();
+
+export function encodeSSE(data: unknown): Uint8Array {
+  return encoder.encode(`data: ${JSON.stringify(data)}\n\n`);
+}
+
 export async function* parseSSEStream<T>(
   response: Response
 ): AsyncGenerator<T> {

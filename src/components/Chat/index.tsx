@@ -8,7 +8,6 @@ import MessageBox from './MessageBox';
 import ErrorToast from '@/components/ErrorToast';
 import { parseSSEStream } from '@/lib/sse';
 import { useState, useRef, useEffect, useMemo, KeyboardEvent } from 'react';
-import { StatusCodes } from 'http-status-codes';
 
 const DEFAULT_MESSAGES: ChatMessage[] = [
   { role: ROLES.ASSISTANT, content: ASSISTANT_WELCOME_MESSAGE },
@@ -37,14 +36,14 @@ export default function Chat({
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [rateLimitError, setRateLimitError] = useState<string | null>(null);
+  const [toastError, setToastError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!rateLimitError) return;
-    const timer = setTimeout(() => setRateLimitError(null), 5000);
+    if (!toastError) return;
+    const timer = setTimeout(() => setToastError(null), 5000);
     return () => clearTimeout(timer);
-  }, [rateLimitError]);
+  }, [toastError]);
 
   const totalCost = useMemo(
     () => messages.reduce((sum, msg) => sum + (msg.usage?.cost ?? 0), 0),
@@ -92,19 +91,12 @@ export default function Chat({
         }),
       });
 
-      if (response.status === StatusCodes.TOO_MANY_REQUESTS) {
+      if (!response.ok) {
         const data = await response.json().catch(() => null);
-        setRateLimitError(
-          data?.error || 'Too many requests. Please slow down.'
-        );
+        setToastError(data?.error || 'Something went wrong. Please try again.');
         setMessages(messages);
         setInput(trimmed);
         return;
-      }
-
-      if (!response.ok) {
-        const data = await response.json().catch(() => null);
-        throw new Error(data?.error || 'Request failed');
       }
 
       for await (const event of parseSSEStream<ChatStreamEvent>(response)) {
@@ -146,10 +138,10 @@ export default function Chat({
 
   return (
     <div className="flex flex-1 flex-col">
-      {rateLimitError && (
+      {toastError && (
         <ErrorToast
-          message={rateLimitError}
-          onDismiss={() => setRateLimitError(null)}
+          message={toastError}
+          onDismiss={() => setToastError(null)}
         />
       )}
 
