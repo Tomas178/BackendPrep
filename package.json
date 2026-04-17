@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "NEXT_MANUAL_SIG_HANDLE=true next start",
     "prod": "pnpm build && pnpm start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
