@@ -35,6 +35,13 @@ export class GracefulShutdownManager {
     this.cleanupHandlers.push({ name, handler, priority });
   }
 
+  private async flushStdio(): Promise<void> {
+    await Promise.all([
+      new Promise<void>((resolve) => process.stdout.write('', () => resolve())),
+      new Promise<void>((resolve) => process.stderr.write('', () => resolve())),
+    ]);
+  }
+
   async shutdown(signal: string) {
     if (this.isShuttingDown) {
       logger.shutdown('Shutdown already in progress');
@@ -45,9 +52,10 @@ export class GracefulShutdownManager {
     logger.shutdown(`${signal} received. Starting graceful shutdown...`);
     const startTime = Date.now();
 
-    const forceShutdownTimer = setTimeout(() => {
-      console.error('Shutdown timeout exceeded, forcing exit');
-      setTimeout(() => this.exit(1), 100);
+    const forceShutdownTimer = setTimeout(async () => {
+      logger.error('Shutdown timeout exceeded, forcing exit');
+      await this.flushStdio();
+      this.exit(1);
     }, this.shutdownTimeout).unref();
 
     try {
@@ -76,11 +84,13 @@ export class GracefulShutdownManager {
       logger.shutdown(`Graceful shutdown completed in ${duration}ms`);
 
       clearTimeout(forceShutdownTimer);
-      setTimeout(() => this.exit(0), 100);
+      await this.flushStdio();
+      this.exit(0);
     } catch (error) {
       logger.error(`Error during shutdown: ${error}`);
       clearTimeout(forceShutdownTimer);
-      setTimeout(() => this.exit(1), 100);
+      await this.flushStdio();
+      this.exit(1);
     }
   }
 

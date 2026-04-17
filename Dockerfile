@@ -24,6 +24,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0
 ENV PORT=3000
+ENV NEXT_MANUAL_SIG_HANDLE=true
 
 # For safety reasons do not run as root, so instead we create nextjs user
 RUN addgroup --system --gid 1001 nodejs
