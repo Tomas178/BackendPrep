@@ -14,6 +14,9 @@ export async function register() {
 
   await import('@/lib/db');
   await import('@/lib/redis');
+  await import('@/lib/email/client');
+  await import('@/lib/queues/email');
+  await import('@/lib/workers/email');
 
   const { setupGracefulShutdown } = await import('@/lib/gracefulShutdown');
   setupGracefulShutdown();

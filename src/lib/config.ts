@@ -28,14 +28,12 @@ const schema = z
       }),
     }),
     mail: z.object({
-      host: z.string().min(1, 'MAIL_HOST is required'),
-      port: z.coerce.number().default(1025),
-      secure: z
-        .enum(['true', 'false'])
-        .default('false')
-        .transform((v) => v === 'true'),
-      email: z.string().min(1, 'EMAIL is required'),
-      appPassword: z.string().min(1, 'EMAIL_APP_PASS is required'),
+      host: z.string().optional(),
+      service: z.string().default('gmail'),
+      port: z.coerce.number().default(465),
+      secure: z.stringbool(),
+      email: z.email(),
+      pass: z.string(),
     }),
     auth: z.object({
       openai: z.object({
@@ -72,10 +70,11 @@ const config = schema.parse({
   },
   mail: {
     host: process.env.MAIL_HOST,
+    service: process.env.MAIL_SERVICE,
     port: process.env.MAIL_PORT,
     secure: process.env.MAIL_SECURE,
     email: process.env.EMAIL,
-    appPassword: process.env.EMAIL_APP_PASS,
+    pass: process.env.EMAIL_APP_PASS,
   },
   auth: {
     openai: {

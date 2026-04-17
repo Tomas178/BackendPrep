@@ -23,6 +23,5 @@ export function setupGracefulShutdown() {
 
   process.on('unhandledRejection', (reason) => {
     logger.error(`Unhandled rejection: ${reason}`);
-    gracefulShutdownManager.shutdown('unhandledRejection');
   });
 }

@@ -3,8 +3,8 @@ import { nextCookies } from 'better-auth/next-js';
 import { db } from '@/lib/db';
 import * as schema from '@/lib/db/schema';
 import config from '@/lib/config';
-import { sendVerificationEmail } from '@/lib/email/sendVerificationEmail';
-import { transporter } from '@/lib/email/transporter';
+import { EmailTemplate } from '@/constants/emailTemplate';
+import { addEmailJob } from '@/lib/queues/email';
 import { drizzleAdapter } from '@better-auth/drizzle-adapter';
 
 export const auth = betterAuth({
@@ -31,7 +31,12 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
-      sendVerificationEmail(transporter, config.mail.email, user.email, url);
+      await addEmailJob({
+        emailType: EmailTemplate.VERIFY_EMAIL,
+        to: user.email,
+        username: user.name,
+        url,
+      });
     },
   },
 
