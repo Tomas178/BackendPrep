@@ -2,7 +2,7 @@
 
 An interview practice app for Junior/Entry-Level software engineering positions in backend.
 
-<u>[Check it out](https://backendprep.sk05mvs33xkna.eu-central-1.cs.amazonlightsail.com/)</u>
+<u>[Check it out!](https://backendprep.sk05mvs33xkna.eu-central-1.cs.amazonlightsail.com/)</u>
 
 ## Tools
 
