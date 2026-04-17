@@ -19,7 +19,7 @@ if (!globalForDb.pool) {
   pool.on('error', (err) => logger.error('PostgreSQL pool error:', err));
 
   gracefulShutdownManager.registerCleanup(
-    'postgres-pool',
+    'db-pool',
     () => pool.end(),
     GracefulShutdownPriority.HIGH
   );
