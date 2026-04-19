@@ -120,10 +120,9 @@ export default function Chat({
           ? error.message
           : 'Something went wrong. Please try again.';
 
-      updateLastMessage(() => ({
-        role: ROLES.ASSISTANT,
-        content: errorMessage,
-      }));
+      setToastError(errorMessage);
+      setMessages(messages);
+      setInput(trimmed);
     } finally {
       setIsLoading(false);
     }

@@ -46,9 +46,14 @@ const OPENAI_MODEL_OPTIONS: ModelOption<OpenaiAvailableModels>[] = [
 
 const ANTHROPIC_MODEL_OPTIONS: ModelOption<AnthropicAvailableModels>[] = [
   {
+    value: ALL_AVAILABLE_MODELS.ANTHROPIC.CLAUDE_OPUS_4_7,
+    label: 'Claude Opus 4.7',
+    description: 'Newest Release',
+  },
+  {
     value: ALL_AVAILABLE_MODELS.ANTHROPIC.CLAUDE_OPUS_4_6,
     label: 'Claude Opus 4.6',
-    description: 'Most capable',
+    description: 'Second Best',
   },
   {
     value: ALL_AVAILABLE_MODELS.ANTHROPIC.CLAUDE_SONNET_4_6,

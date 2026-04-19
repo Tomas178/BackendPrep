@@ -1,5 +1,6 @@
 import type { SliderProps } from './Slider';
 import { AVAILABLE_LLMS } from '@/constants/LLMs/availableLLMs';
+import { ALL_AVAILABLE_MODELS } from '@/constants/LLMs/allModels';
 import {
   MAX_FREQUENCY_PENALTY,
   MAX_MAX_OUTPUT_TOKENS,
@@ -26,6 +27,7 @@ export type SliderConfig = Omit<
 > & {
   key: SettingKey;
   unsupportedProviders?: string[];
+  unsupportedModels?: string[];
   maxValueOverrides?: Partial<Record<string, number>>;
 };
 
@@ -39,6 +41,7 @@ export const SLIDER_CONFIGS: SliderConfig[] = [
     explanatoryTextForMinValue: 'Precise',
     explanatoryTextForMaxValue: 'Creative',
     maxValueOverrides: { [AVAILABLE_LLMS.ANTHROPIC]: 1 },
+    unsupportedModels: [ALL_AVAILABLE_MODELS.ANTHROPIC.CLAUDE_OPUS_4_7],
   },
   {
     key: 'topP',

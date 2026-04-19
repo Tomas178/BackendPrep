@@ -3,17 +3,20 @@
 import { useEffect, useRef, useState } from 'react';
 import { Settings as SettingsIcon, ChevronDown } from 'lucide-react';
 import type { AvailableLLMs } from '@/constants/LLMs/availableLLMs';
+import type { AllModels } from '@/constants/LLMs/allModels';
 import Slider from './Slider';
 import { SLIDER_CONFIGS, type SettingKey } from './config';
 
 type SettingsProps = {
   provider: AvailableLLMs;
+  model: AllModels;
   values: Record<SettingKey, number>;
   onChange: Record<SettingKey, (value: number) => void>;
 };
 
 export default function Settings({
   provider,
+  model,
   values,
   onChange,
 }: SettingsProps) {
@@ -62,11 +65,15 @@ export default function Settings({
               ({
                 key,
                 unsupportedProviders,
+                unsupportedModels,
                 maxValueOverrides,
                 ...sliderProps
               }) => {
                 const maxValue =
                   maxValueOverrides?.[provider] ?? sliderProps.maxValue;
+                const disabled =
+                  unsupportedProviders?.includes(provider) ||
+                  unsupportedModels?.includes(model);
                 return (
                   <Slider
                     key={key}
@@ -74,7 +81,7 @@ export default function Settings({
                     maxValue={maxValue}
                     parameter={Math.min(values[key], maxValue)}
                     onParameterChange={onChange[key]}
-                    disabled={unsupportedProviders?.includes(provider)}
+                    disabled={disabled}
                   />
                 );
               }

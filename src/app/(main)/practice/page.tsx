@@ -187,6 +187,7 @@ export default function Practice() {
             <div className="flex items-center gap-2">
               <SettingsDropdown
                 provider={provider}
+                model={model}
                 values={{
                   temperature,
                   topP,
