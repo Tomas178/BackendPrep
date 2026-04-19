@@ -2,6 +2,7 @@
 
 import { ROLES } from '@/constants/LLMs/roles';
 import { ASSISTANT_WELCOME_MESSAGE } from '@/constants/LLMs/prompts';
+import { MAX_USER_MESSAGE_LENGTH } from '@/constants/LLMs/settings';
 import type { AvailableLLMs } from '@/constants/LLMs/availableLLMs';
 import type { ChatMessage, ChatSettings, ChatStreamEvent } from '@/types/chat';
 import MessageBox from './MessageBox';
@@ -164,24 +165,36 @@ export default function Chat({
             e.preventDefault();
             sendMessage();
           }}
-          className="mx-auto flex max-w-3xl items-end gap-2"
+          className="mx-auto flex max-w-3xl flex-col gap-1"
         >
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type your answer..."
-            rows={1}
-            disabled={isLoading}
-            className="border-border bg-surface-alt text-primary placeholder:text-muted focus:border-accent flex-1 resize-none rounded-xl border px-4 py-3 text-sm focus:outline-none disabled:opacity-50"
-          />
-          <button
-            type="submit"
-            disabled={isLoading || !input.trim()}
-            className="bg-accent text-accent-foreground cursor-pointer rounded-xl px-4 py-3 text-sm font-medium transition-colors hover:opacity-90 disabled:opacity-50"
+          <div className="flex items-end gap-2">
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Type your answer..."
+              rows={1}
+              disabled={isLoading}
+              maxLength={MAX_USER_MESSAGE_LENGTH}
+              className="border-border bg-surface-alt text-primary placeholder:text-muted focus:border-accent flex-1 resize-none rounded-xl border px-4 py-3 text-sm focus:outline-none disabled:opacity-50"
+            />
+            <button
+              type="submit"
+              disabled={isLoading || !input.trim()}
+              className="bg-accent text-accent-foreground cursor-pointer rounded-xl px-4 py-3 text-sm font-medium transition-colors hover:opacity-90 disabled:opacity-50"
+            >
+              Send
+            </button>
+          </div>
+          <p
+            className={`text-right text-xs ${
+              input.length >= MAX_USER_MESSAGE_LENGTH
+                ? 'text-red-500'
+                : 'text-muted'
+            }`}
           >
-            Send
-          </button>
+            {input.length}/{MAX_USER_MESSAGE_LENGTH}
+          </p>
         </form>
       </div>
     </div>

@@ -17,3 +17,5 @@ export const MAX_FREQUENCY_PENALTY = 2;
 export const DEFAULT_PRESENCE_PENALTY = 0;
 export const MIN_PRESENCE_PENALTY = -2;
 export const MAX_PRESENCE_PENALTY = 2;
+
+export const MAX_USER_MESSAGE_LENGTH = 2000;

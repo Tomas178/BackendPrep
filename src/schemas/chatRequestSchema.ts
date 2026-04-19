@@ -8,6 +8,7 @@ import {
   MAX_PRESENCE_PENALTY,
   MAX_TEMPERATURE,
   MAX_TOP_P,
+  MAX_USER_MESSAGE_LENGTH,
   MIN_FREQUENCY_PENALTY,
   MIN_MAX_OUTPUT_TOKENS,
   MIN_PRESENCE_PENALTY,
@@ -73,5 +74,19 @@ export const chatRequestSchema = z
     {
       message: 'Model is not available for the selected provider',
       path: ['settings', 'model'],
+    }
+  )
+  .refine(
+    (data) => {
+      const last = data.messages.at(-1);
+      return (
+        !last ||
+        last.role !== ROLES.USER ||
+        last.content.length <= MAX_USER_MESSAGE_LENGTH
+      );
+    },
+    {
+      message: `Message exceeds ${MAX_USER_MESSAGE_LENGTH} character limit`,
+      path: ['messages'],
     }
   );

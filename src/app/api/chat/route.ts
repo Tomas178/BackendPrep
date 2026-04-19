@@ -20,7 +20,8 @@ export const POST = withErrorHandling(
     const body = await req.json();
     const result = chatRequestSchema.safeParse(body);
     if (!result.success) {
-      throw new ChatInvalidRequestError();
+      console.log(result);
+      throw new ChatInvalidRequestError(result.error.issues[0].message);
     }
 
     const { chatId, messages, provider, settings } = result.data;
