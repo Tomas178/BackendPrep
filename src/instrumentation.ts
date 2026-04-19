@@ -9,7 +9,7 @@ export async function register() {
     await migrate(db, { migrationsFolder: './drizzle' });
 
     const { default: logger } = await import('@/lib/logger');
-    logger.info('Database migrations applied');
+    logger.info('Database migrations applied!');
   }
 
   await import('@/lib/db');
