@@ -4,6 +4,8 @@ import {
   type AnthropicAvailableModels,
 } from './availableModels';
 
+// https://platform.claude.com/docs/en/about-claude/pricing
+
 export const ANTHROPIC_MODELS_PRICINGS: Record<
   AnthropicAvailableModels,
   ModelPricing

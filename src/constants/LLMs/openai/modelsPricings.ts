@@ -4,6 +4,8 @@ import {
   type OpenaiAvailableModels,
 } from './availableModels';
 
+// https://developers.openai.com/api/docs/pricing
+
 export const OPENAI_MODELS_PRICINGS: Record<
   OpenaiAvailableModels,
   ModelPricing

@@ -4,6 +4,8 @@ import {
   type GoogleAvailableModels,
 } from './availableModels';
 
+// https://ai.google.dev/gemini-api/docs/pricing
+
 export const GOOGLE_MODELS_PRICINGS: Record<
   GoogleAvailableModels,
   ModelPricing
